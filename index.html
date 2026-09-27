@@ -1,1005 +1,942 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="ko" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yo-Yo 1A Trick Score Standardization Platform</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yo-Yo 1A Trick Score Standardization Platform</title>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#ecfeff',
-                            100: '#cffaff',
-                            400: '#22d3ee',
-                            500: '#06b6d4',
-                            600: '#0891b2',
-                            900: '#164e63',
-                        }
-                    }
-                }
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
             }
+          }
         }
-    </script>
+      }
+    };
+  </script>
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-        }
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .star-rating i {
-            cursor: pointer;
-            transition: transform 0.15s ease, color 0.15s ease;
-        }
-        .star-rating i:hover {
-            transform: scale(1.25);
-        }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #0891b2;
-        }
-    </style>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white">
+<body class="bg-slate-50 text-slate-900 dark:bg-black dark:text-slate-100 min-h-screen flex flex-col selection:bg-slate-300 dark:selection:bg-slate-800">
 
-    <!-- Top Navigation Bar -->
-    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800 shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-            <!-- Logo -->
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="resetFilters()">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                    <i class="fa-solid font-bold text-xl text-white">🪀</i>
-                </div>
+  <!-- Header / Navbar -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="resetSearch()">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-black flex items-center justify-center font-black text-xl shadow-md transition-transform hover:scale-105">
+          1A
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight tracking-tight text-slate-900 dark:text-white">Yo-Yo 1A Index</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Trick Standardization & Rating</p>
+        </div>
+      </div>
+
+      <!-- Right Controls: Language, Theme Toggle, Auth -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        
+        <!-- Language Switcher -->
+        <div class="relative">
+          <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium py-2 px-3 pr-8 rounded-lg border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 cursor-pointer appearance-none transition">
+            <option value="ko">🇰🇷 한국어</option>
+            <option value="en">🇺🇸 English</option>
+            <option value="zh">🇨🇳 中文</option>
+            <option value="ja">🇯🇵 日本語</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+            <i class="fa-solid font-xs fa-chevron-down text-[10px]"></i>
+          </div>
+        </div>
+
+        <!-- Theme Switcher Button -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-200 dark:hover:bg-slate-800 transition flex items-center justify-center w-10 h-10" title="Toggle Theme">
+          <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
+        </button>
+
+        <!-- Login / Admin Status Button -->
+        <button id="authBtn" onclick="openAuthModal()" class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-white dark:text-slate-900 font-semibold text-xs sm:text-sm shadow-sm transition">
+          <i class="fa-solid fa-user"></i>
+          <span id="authBtnText">로그인</span>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Hero / Search Section -->
+    <section class="text-center py-6 sm:py-10 max-w-3xl mx-auto">
+      <h2 id="heroTitle" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-3">
+        1A 요요 기술 표준 점수 및 사전
+      </h2>
+      <p id="heroSubtitle" class="text-slate-600 dark:text-slate-400 text-sm sm:text-base mb-8">
+        전 세계 플레이어들의 실시간 평가로 완성되는 객관적인 요요 난이도 체계
+      </p>
+
+      <!-- Search Input Container -->
+      <div class="relative max-w-2xl mx-auto">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+          <i class="fa-solid fa-magnifying-glass text-lg"></i>
+        </div>
+        <input 
+          type="text" 
+          id="searchInput" 
+          oninput="handleSearch()"
+          placeholder="기술 이름을 검색하세요 (예: Trapeze, Matrix)..." 
+          class="w-full pl-11 pr-10 py-3.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 transition"
+        >
+        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-circle-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Quick Filter Tags & Add Trick Button -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mt-6">
+        <div class="flex flex-wrap items-center gap-1.5 text-xs">
+          <span id="filterLabel" class="text-slate-500 dark:text-slate-400 font-medium mr-1">난이도:</span>
+          <button onclick="filterDifficulty('all')" class="diff-btn active px-2.5 py-1 rounded-md bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 font-semibold transition" data-diff="all">전체</button>
+          <button onclick="filterDifficulty('1')" class="diff-btn px-2.5 py-1 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition" data-diff="1">Lv 1</button>
+          <button onclick="filterDifficulty('2')" class="diff-btn px-2.5 py-1 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition" data-diff="2">Lv 2</button>
+          <button onclick="filterDifficulty('3')" class="diff-btn px-2.5 py-1 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition" data-diff="3">Lv 3</button>
+          <button onclick="filterDifficulty('4')" class="diff-btn px-2.5 py-1 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition" data-diff="4">Lv 4</button>
+          <button onclick="filterDifficulty('5')" class="diff-btn px-2.5 py-1 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition" data-diff="5">Lv 5</button>
+          <button onclick="filterDifficulty('5+')" class="diff-btn px-2.5 py-1 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition" data-diff="5+">Lv 5+</button>
+        </div>
+
+        <button id="addTrickBtn" onclick="openAddModal()" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-sm">
+          <i class="fa-solid fa-plus"></i>
+          <span id="addTrickBtnText">기술 등록</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Trick Cards Grid Container -->
+    <section class="mt-4">
+      <div class="flex justify-between items-center mb-4 px-1">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <span id="resultsCount">0</span> <span id="tricksFoundText">개의 기술 등록됨</span>
+        </span>
+        <div class="flex items-center gap-2 text-xs text-slate-500">
+          <i class="fa-solid fa-arrows-up-down"></i>
+          <select id="sortSelect" onchange="handleSortChange()" class="bg-transparent border-none text-slate-700 dark:text-slate-300 font-medium focus:outline-none cursor-pointer">
+            <option value="name" class="bg-white dark:bg-slate-900">이름순</option>
+            <option value="score_desc" class="bg-white dark:bg-slate-900">평점 높은순</option>
+            <option value="score_asc" class="bg-white dark:bg-slate-900">평점 낮은순</option>
+            <option value="diff" class="bg-white dark:bg-slate-900">난이도순</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div id="trickGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Cards inserted dynamically via JavaScript -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden text-center py-16 bg-white dark:bg-slate-900/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
+        <i class="fa-solid fa-circle-exclamation text-4xl text-slate-400 mb-3"></i>
+        <h3 id="emptyTitle" class="text-lg font-bold text-slate-700 dark:text-slate-300">검색 결과가 없습니다</h3>
+        <p id="emptyDesc" class="text-sm text-slate-500 dark:text-slate-400 mt-1">다른 검색어나 난이도 필터를 선택해 보세요.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-16 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 py-8 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <p class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Yo-Yo 1A Trick Score Standardization Platform</p>
+      <p id="footerCopy">전 세계 1A 종목 요요 플레이어를 위한 개방형 점수 규격화 데이터베이스</p>
+      <p class="mt-3 text-[11px] text-slate-400 dark:text-slate-600">Powered by Firebase Firestore Sync & Design Tokens</p>
+    </div>
+  </footer>
+
+  <!-- Modal 1: Auth Modal (User / Admin) -->
+  <div id="authModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative transition-all">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- Auth Tabs -->
+      <div class="flex border-b border-slate-200 dark:border-slate-800 mb-6">
+        <button id="userTabBtn" onclick="switchAuthTab('user')" class="flex-1 py-2.5 font-bold text-sm text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white transition">
+          일반 사용자
+        </button>
+        <button id="adminTabBtn" onclick="switchAuthTab('admin')" class="flex-1 py-2.5 font-medium text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border-b-2 border-transparent transition">
+          관리자 로그인
+        </button>
+      </div>
+
+      <!-- User View -->
+      <div id="userAuthContent" class="space-y-4">
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-sm text-slate-600 dark:text-slate-300">
+          <p id="userAuthNotice"><i class="fa-solid fa-circle-info mr-1.5 text-slate-400"></i> 로그인 없이도 바로 기술에 <strong>0점 ~ 5점</strong>까지 자유롭게 투표하실 수 있습니다.</p>
+        </div>
+        <button onclick="closeAuthModal()" class="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-white dark:text-slate-900 font-bold rounded-xl transition">
+          확인 / 닫기
+        </button>
+      </div>
+
+      <!-- Admin View -->
+      <div id="adminAuthContent" class="hidden space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">관리자 암호 (Password)</label>
+          <input type="password" id="adminPassInput" placeholder="비밀번호 입력..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 text-sm">
+        </div>
+        <p id="adminErrorMsg" class="text-xs text-rose-500 font-medium hidden">암호가 일치하지 않습니다.</p>
+        <button onclick="verifyAdmin()" class="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-white dark:text-slate-900 font-bold rounded-xl transition">
+          관리자 인증
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Voting Modal (0 ~ 5 score voting) -->
+  <div id="voteModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl relative">
+      <button onclick="closeVoteModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="text-center mb-5">
+        <span id="voteModalDiff" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200">Difficulty</span>
+        <h3 id="voteModalTrickTitle" class="text-xl font-bold text-slate-900 dark:text-white mt-2">Trick Title</h3>
+        <p id="voteModalSubtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-1">이 기술의 난이도 및 완성도 점수를 평가해주세요 (0~5점)</p>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label id="voteScoreLabel" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">점수 선택 (0.0점 ~ 5.0점)</label>
+          <select id="voteScoreSelect" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-center text-lg focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 cursor-pointer">
+            <option value="5">5.0 점 (매우 우수 / 최상)</option>
+            <option value="4">4.0 점 (우수)</option>
+            <option value="3" selected>3.0 점 (보통)</option>
+            <option value="2">2.0 점 (쉬움)</option>
+            <option value="1">1.0 점 (매우 쉬움)</option>
+            <option value="0">0.0 점 (평가 불가 / 0점)</option>
+          </select>
+        </div>
+
+        <button id="submitVoteBtn" onclick="submitVote()" class="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-white dark:text-slate-900 font-bold rounded-xl transition shadow-md">
+          투표 제출하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Add / Edit Trick Modal (Admin Only) -->
+  <div id="addEditModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeAddEditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <h3 id="addEditModalTitle" class="text-xl font-bold text-slate-900 dark:text-white mb-4">기술 추가</h3>
+
+      <form id="addEditForm" onsubmit="handleAddEditSubmit(event)" class="space-y-4">
+        <input type="hidden" id="editingTrickId">
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">기술 명칭 (Trick Name)</label>
+          <input type="text" id="formTitle" required placeholder="예: Trapeze, Suicide..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">표준 난이도 (Difficulty)</label>
+            <select id="formDifficulty" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100">
+              <option value="1">1 Level</option>
+              <option value="2">2 Level</option>
+              <option value="3" selected>3 Level</option>
+              <option value="4">4 Level</option>
+              <option value="5">5 Level</option>
+              <option value="5+">5+ Level</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">초기 점수 (0.0 ~ 5.0)</label>
+            <input type="number" id="formInitialScore" step="0.1" min="0" max="5" value="3.0" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">YouTube 비디오 URL / 영상 ID</label>
+          <input type="text" id="formVideoUrl" required placeholder="https://www.youtube.com/watch?v=... 또는 ID" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">기술 설명 (Description)</label>
+          <textarea id="formDescription" rows="3" placeholder="기술의 특징 및 마운트 방식을 입력하세요..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-white dark:text-slate-900 font-bold rounded-xl transition shadow-md mt-2">
+          저장하기
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase SDK Modules -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      doc, 
+      getDocs, 
+      setDoc, 
+      addDoc, 
+      updateDoc, 
+      deleteDoc, 
+      onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Firebase Config provided by User
+    const firebaseConfig = {
+      apiKey: "AIzaSyDaWdDcxs2zZtuL7IDS-TxVTf8z7_uee0Y",
+      authDomain: "yoyopoint-f28c4.firebaseapp.com",
+      projectId: "yoyopoint-f28c4",
+      storageBucket: "yoyopoint-f28c4.firebasestorage.app",
+      messagingSenderId: "1071571356574",
+      appId: "1:1071571356574:web:e84ed1f0d30f50bd42648f",
+      measurementId: "G-0VEW1DTMPW"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Initial Default Data Set
+    const initialTricks = [
+      {
+        id: "trapeze",
+        title: "Trapeze (트라피즈)",
+        difficulty: "1",
+        scoreSum: 18,
+        ratingCount: 5,
+        youtubeId: "vB8B3X3t-d8",
+        description: "1A 종목의 모든 기술의 기초가 되는 기본 언더마운트 기술입니다."
+      },
+      {
+        id: "matrix",
+        title: "Matrix (매트릭스)",
+        difficulty: "2",
+        scoreSum: 16,
+        ratingCount: 4,
+        youtubeId: "fW8sL4D368Q",
+        description: "트라피즈에서 연속 회전과 바인드를 이어나가는 클래식 리피터 기술."
+      },
+      {
+        id: "suicide",
+        title: "Suicide (수사이드)",
+        difficulty: "3",
+        scoreSum: 21,
+        ratingCount: 5,
+        youtubeId: "J8mYJ3v4nFA",
+        description: "공중에서 루프를 놓아 캐치하는 인상적인 공중 캐치 기술."
+      },
+      {
+        id: "boing-e-boing",
+        title: "Boing-E-Boing (보잉보잉)",
+        difficulty: "3",
+        scoreSum: 15,
+        ratingCount: 4,
+        youtubeId: "eYy8B84PZbc",
+        description: "요요를 앞뒤로 리드미컬하게 반동시키는 기술입니다."
+      },
+      {
+        id: "kwyjibo",
+        title: "Kwyjibo (퀴지보)",
+        difficulty: "4",
+        scoreSum: 22,
+        ratingCount: 5,
+        youtubeId: "dQw4w9WgXcQ",
+        description: "손가락을 교차하며 화려한 점프를 수행하는 고난도 마운트."
+      }
+    ];
+
+    // Global App State
+    window.appState = {
+      tricks: [],
+      currentLang: 'ko',
+      currentFilter: 'all',
+      searchQuery: '',
+      sortOption: 'name',
+      isAdmin: false,
+      selectedTrickId: null,
+      theme: 'dark' // 'light' or 'dark'
+    };
+
+    // Translations Dictionary
+    const translations = {
+      ko: {
+        heroTitle: "1A 요요 기술 표준 점수 및 사전",
+        heroSubtitle: "전 세계 플레이어들의 실시간 평가로 완성되는 객관적인 요요 난이도 체계",
+        searchPlaceholder: "기술 이름을 검색하세요 (예: Trapeze, Matrix)...",
+        filterLabel: "난이도:",
+        filterAll: "전체",
+        addTrickBtn: "기술 등록",
+        tricksFound: "개의 기술 등록됨",
+        login: "로그인",
+        adminActive: "관리자 모드",
+        userNotice: "로그인 없이도 바로 기술에 0점 ~ 5점까지 자유롭게 투표하실 수 있습니다.",
+        voteBtn: "평가 참여하기",
+        votedBtn: "평가 완료",
+        emptyTitle: "검색 결과가 없습니다",
+        emptyDesc: "다른 검색어나 난이도 필터를 선택해 보세요.",
+        footerCopy: "전 세계 1A 종목 요요 플레이어를 위한 개방형 점수 규격화 데이터베이스",
+        ratePrompt: "이 기술의 난이도 및 완성도 점수를 평가해주세요 (0~5점)"
+      },
+      en: {
+        heroTitle: "Yo-Yo 1A Trick Score Standardization Platform",
+        heroSubtitle: "An objective yo-yo difficulty system completed by real-time evaluations from players worldwide",
+        searchPlaceholder: "Search trick name (e.g. Trapeze, Matrix)...",
+        filterLabel: "Level:",
+        filterAll: "All",
+        addTrickBtn: "Add Trick",
+        tricksFound: "tricks registered",
+        login: "Login",
+        adminActive: "Admin Active",
+        userNotice: "You can freely vote from 0 to 5 points without logging in.",
+        voteBtn: "Rate Trick",
+        votedBtn: "Voted",
+        emptyTitle: "No tricks found",
+        emptyDesc: "Try searching with a different keyword or level filter.",
+        footerCopy: "Open score standardization database for 1A yo-yo players worldwide",
+        ratePrompt: "Please rate the difficulty and quality of this trick (0 to 5 pts)"
+      },
+      zh: {
+        heroTitle: "1A 悠悠球招式标准评分与词典",
+        heroSubtitle: "通过全球玩家的实时评估完成的客观悠悠球难度体系",
+        searchPlaceholder: "搜索招式名称 (例如: Trapeze, Matrix)...",
+        filterLabel: "难度:",
+        filterAll: "全部",
+        addTrickBtn: "添加招式",
+        tricksFound: "个招式已注册",
+        login: "登录",
+        adminActive: "管理员模式",
+        userNotice: "无需登录即可自由对招式打 0 到 5 分。",
+        voteBtn: "参与评分",
+        votedBtn: "已评分",
+        emptyTitle: "未找到搜索结果",
+        emptyDesc: "请尝试选择其他关键字或难度筛选器。",
+        footerCopy: "面向全球 1A 悠悠球玩家的开放式分数标准化数据库",
+        ratePrompt: "请评估此招式的难度与完成度分数 (0~5分)"
+      },
+      ja: {
+        heroTitle: "1A ヨーヨー技 Standard Score Dictionary",
+        heroSubtitle: "世界中のプレイヤーのリアルタイム評価で完成する客観的な難易度体系",
+        searchPlaceholder: "技の名前を検索 (例: Trapeze, Matrix)...",
+        filterLabel: "難易度:",
+        filterAll: "すべて",
+        addTrickBtn: "技を追加",
+        tricksFound: "個の技が登録済み",
+        login: "ログイン",
+        adminActive: "管理者モード",
+        userNotice: "ログインなしで 0点〜5点 まで自由に投票いただけます。",
+        voteBtn: "評価する",
+        votedBtn: "評価済み",
+        emptyTitle: "検索結果がありません",
+        emptyDesc: "別の検索語や難易度フィルターをお試しください。",
+        footerCopy: "世界中の1Aヨーヨープレイヤーのためのオープン点수規格化データベース",
+        ratePrompt: "この技の難易度と完成度を評価してください (0〜5点)"
+      }
+    };
+
+    // Initialize App & Auth
+    window.addEventListener('DOMContentLoaded', async () => {
+      initTheme();
+      try {
+        await signInAnonymously(auth);
+      } catch(err) {
+        console.log("Anonymous auth fallback:", err);
+      }
+      setupRealtimeFirestore();
+    });
+
+    // Theme Management Functions
+    window.initTheme = function() {
+      const savedTheme = localStorage.getItem('yo1a_theme') || 'dark';
+      setTheme(savedTheme);
+    };
+
+    window.toggleTheme = function() {
+      const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      const nextTheme = current === 'dark' ? 'light' : 'dark';
+      setTheme(nextTheme);
+    };
+
+    function setTheme(theme) {
+      window.appState.theme = theme;
+      localStorage.setItem('yo1a_theme', theme);
+      
+      const themeIcon = document.getElementById('themeIcon');
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        themeIcon.className = 'fa-solid fa-sun text-amber-400';
+      } else {
+        document.documentElement.classList.remove('dark');
+        themeIcon.className = 'fa-solid fa-moon text-slate-700';
+      }
+    }
+
+    // Firestore Sync with Local Fallback
+    function setupRealtimeFirestore() {
+      const tricksCol = collection(db, "artifacts", "yo-yo-1a-tricks", "public", "data", "tricks");
+
+      onSnapshot(tricksCol, (snapshot) => {
+        if (!snapshot.empty) {
+          const list = [];
+          snapshot.forEach(doc => {
+            list.push({ id: doc.id, ...doc.data() });
+          });
+          window.appState.tricks = list;
+        } else {
+          // If empty in cloud, populate initial default set
+          initialTricks.forEach(t => {
+            setDoc(doc(tricksCol, t.id), t);
+          });
+          window.appState.tricks = initialTricks;
+        }
+        renderTricks();
+      }, (error) => {
+        console.warn("Firestore access error, falling back to local memory:", error);
+        window.appState.tricks = initialTricks;
+        renderTricks();
+      });
+    }
+
+    // Filter & Search Engine (Matches query length priority)
+    window.renderTricks = function() {
+      const grid = document.getElementById('trickGrid');
+      const emptyState = document.getElementById('emptyState');
+      const query = window.appState.searchQuery.trim().toLowerCase();
+      const filter = window.appState.currentFilter;
+      const sort = window.appState.sortOption;
+
+      let filtered = window.appState.tricks.filter(item => {
+        const matchesDiff = (filter === 'all') || (item.difficulty === filter);
+        const matchesQuery = !query || item.title.toLowerCase().includes(query) || (item.description && item.description.toLowerCase().includes(query));
+        return matchesDiff && matchesQuery;
+      });
+
+      // Priority sort for search query length proximity
+      if (query) {
+        filtered.sort((a, b) => {
+          const aTitle = a.title.toLowerCase();
+          const bTitle = b.title.toLowerCase();
+          const aDiff = Math.abs(aTitle.length - query.length);
+          const bDiff = Math.abs(bTitle.length - query.length);
+          return aDiff - bDiff;
+        });
+      } else {
+        // Standard dropdown sort
+        filtered.sort((a, b) => {
+          const meanA = a.ratingCount > 0 ? (a.scoreSum / a.ratingCount) : 0;
+          const meanB = b.ratingCount > 0 ? (b.scoreSum / b.ratingCount) : 0;
+
+          if (sort === 'score_desc') return meanB - meanA;
+          if (sort === 'score_asc') return meanA - meanB;
+          if (sort === 'diff') return (parseInt(b.difficulty) || 0) - (parseInt(a.difficulty) || 0);
+          return a.title.localeCompare(b.title);
+        });
+      }
+
+      document.getElementById('resultsCount').innerText = filtered.length;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      grid.innerHTML = filtered.map(trick => createTrickCardHTML(trick)).join('');
+    };
+
+    // Calculate Mean Score & Card Template
+    function createTrickCardHTML(trick) {
+      const meanScore = trick.ratingCount > 0 ? (trick.scoreSum / trick.ratingCount).toFixed(1) : "0.0";
+      const userVoted = isVoted(trick.id);
+      const lang = window.appState.currentLang;
+      const t = translations[lang] || translations.ko;
+
+      // Extract YouTube ID
+      let yid = trick.youtubeId || "";
+      if (yid.includes("v=")) {
+        yid = yid.split("v=")[1].split("&")[0];
+      } else if (yid.includes("youtu.be/")) {
+        yid = yid.split("youtu.be/")[1];
+      }
+
+      return `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+          <div>
+            <!-- Video Embed Container -->
+            <div class="relative w-full aspect-video bg-slate-950">
+              <iframe 
+                src="https://www.youtube.com/embed/${yid}" 
+                title="${trick.title}"
+                class="w-full h-full border-none"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-5">
+              <div class="flex items-start justify-between gap-2 mb-2">
                 <div>
-                    <h1 class="font-extrabold text-lg sm:text-xl tracking-tight bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                        YoYoPoint 1A
-                    </h1>
-                    <p class="text-[10px] text-slate-400 -mt-1 font-medium tracking-wider uppercase">Trick Standard Hub</p>
-                </div>
-            </div>
-
-            <!-- Right Controls: Language & Auth -->
-            <div class="flex items-center gap-3">
-                <!-- Language Selector -->
-                <div class="relative">
-                    <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-800 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold px-2.5 py-1.5 focus:outline-none focus:border-cyan-500 cursor-pointer">
-                        <option value="ko">🇰🇷 한국어</option>
-                        <option value="en">🇺🇸 English</option>
-                        <option value="ja">🇯🇵 日本語</option>
-                        <option value="zh">🇨🇳 中文</option>
-                    </select>
+                  <span class="inline-block px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                    Difficulty Level ${trick.difficulty}
+                  </span>
+                  <h3 class="text-lg font-extrabold text-slate-900 dark:text-white mt-1.5 leading-snug">
+                    ${trick.title}
+                  </h3>
                 </div>
 
-                <!-- User Profile / Auth Status -->
-                <div id="authBar" class="flex items-center gap-2">
-                    <!-- Populated dynamically via JS -->
+                <!-- Score Badge -->
+                <div class="text-right flex-shrink-0">
+                  <div class="flex items-baseline justify-end gap-1 text-slate-900 dark:text-white">
+                    <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                    <span class="text-xl font-black">${meanScore}</span>
+                  </div>
+                  <span class="text-[11px] text-slate-400 font-medium">(${trick.ratingCount || 0} votes)</span>
                 </div>
+              </div>
+
+              <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 mt-2 leading-relaxed">
+                ${trick.description || "등록된 설명이 없습니다."}
+              </p>
             </div>
-        </div>
-    </header>
+          </div>
 
-    <!-- Main Content Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
-        <!-- Hero Banner -->
-        <section class="relative rounded-2xl overflow-hidden mb-8 p-6 sm:p-10 border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-800/80 to-slate-900 shadow-2xl">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(6,182,212,0.15),transparent_60%)]"></div>
-            <div class="relative z-10 max-w-3xl">
-                <span class="px-3 py-1 text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-full inline-block mb-3" data-i18n="hero_tag">
-                    Official 1A Standardized Scoring
-                </span>
-                <h2 class="text-2xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight leading-tight" data-i18n="hero_title">
-                    Master the String. Standardize the Score.
-                </h2>
-                <p class="text-sm sm:text-base text-slate-300 mb-6 leading-relaxed" data-i18n="hero_desc">
-                    Explore standardized 1A yo-yo trick tutorials, ratings, and difficulty breakdowns contributed by players worldwide.
-                </p>
-
-                <!-- Search and Difficulty Filter Controls -->
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <div class="relative flex-grow">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                        <input type="text" id="searchInput" oninput="handleSearchInput()" placeholder="Search tricks (e.g., Kwijibo, Trapeze)..." data-i18n-placeholder="search_placeholder" class="w-full bg-slate-950/80 text-slate-100 placeholder-slate-500 text-sm rounded-xl pl-10 pr-4 py-3 border border-slate-700/80 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all">
-                    </div>
-
-                    <!-- Difficulty Filter Buttons -->
-                    <div class="flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-slate-700/80 overflow-x-auto">
-                        <button onclick="setDifficultyFilter('ALL')" id="diff-ALL" class="diff-btn px-3 py-2 rounded-lg text-xs font-semibold text-white bg-cyan-600 transition-all whitespace-nowrap">All</button>
-                        <button onclick="setDifficultyFilter('1')" id="diff-1" class="diff-btn px-2.5 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">1</button>
-                        <button onclick="setDifficultyFilter('2')" id="diff-2" class="diff-btn px-2.5 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">2</button>
-                        <button onclick="setDifficultyFilter('3')" id="diff-3" class="diff-btn px-2.5 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">3</button>
-                        <button onclick="setDifficultyFilter('4')" id="diff-4" class="diff-btn px-2.5 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">4</button>
-                        <button onclick="setDifficultyFilter('5')" id="diff-5" class="diff-btn px-2.5 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">5</button>
-                        <button onclick="setDifficultyFilter('5+')" id="diff-5+" class="diff-btn px-2.5 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">5+</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Admin Add Trick Action & Trick Count Header -->
-        <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-2">
-                <h3 class="text-xl font-bold text-slate-100" data-i18n="trick_dictionary_title">Trick Dictionary</h3>
-                <span id="trickCountBadge" class="bg-slate-800 text-cyan-400 text-xs font-bold px-2.5 py-1 rounded-full border border-slate-700">
-                    0
-                </span>
-            </div>
-
-            <!-- Admin Button (Hidden by default unless logged in as admin) -->
-            <div id="adminControlsHeader" class="hidden">
-                <button onclick="openAddModal()" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-lg shadow-cyan-500/20 flex items-center gap-2 transition-all transform active:scale-95">
-                    <i class="fa-solid fa-plus"></i>
-                    <span data-i18n="add_new_trick">Add Trick</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Trick Cards Grid -->
-        <div id="tricksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Loading Spinner State -->
-            <div class="col-span-full py-16 text-center">
-                <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-cyan-500 border-t-transparent"></div>
-                <p class="text-slate-400 text-sm mt-3" data-i18n="loading_tricks">Connecting to Firestore & Syncing Tricks...</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto px-4">
-            <p data-i18n="footer_rights">© 2026 YoYoPoint 1A Platform. Standardized Trick Score Registry.</p>
-            <p class="mt-1 text-[11px] text-slate-600" data-i18n="footer_disclaimer">Scores synced via Firebase Firestore in real-time. Admin Passkey required for editing catalog.</p>
-        </div>
-    </footer>
-
-    <!-- MODAL: Auth (Login/Register/Admin Login) -->
-    <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-6 relative">
-            <button onclick="closeModal('authModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
+          <!-- Card Footer Controls -->
+          <div class="px-5 py-3.5 bg-slate-50 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+            <button 
+              onclick="openVoteModal('${trick.id}')" 
+              ${userVoted ? 'disabled' : ''}
+              class="${userVoted ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed' : 'bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-white dark:text-slate-900 shadow-sm'} px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+              <i class="fa-solid ${userVoted ? 'fa-check' : 'fa-pen-to-square'}"></i>
+              <span>${userVoted ? t.votedBtn : t.voteBtn}</span>
             </button>
 
-            <!-- Tabs -->
-            <div class="flex border-b border-slate-800 mb-5">
-                <button id="tabUserBtn" onclick="switchAuthTab('user')" class="flex-1 py-2 font-semibold text-sm border-b-2 border-cyan-500 text-cyan-400" data-i18n="tab_user">User Login</button>
-                <button id="tabAdminBtn" onclick="switchAuthTab('admin')" class="flex-1 py-2 font-semibold text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200" data-i18n="tab_admin">Admin Passkey</button>
-            </div>
-
-            <!-- User Auth Form -->
-            <form id="userAuthForm" onsubmit="handleUserLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="label_username">Username</label>
-                    <input type="text" id="authUsername" required placeholder="Enter nickname..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="label_password">Password</label>
-                    <input type="password" id="authPassword" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
-                </div>
-                <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2.5 rounded-xl text-sm transition-all shadow-md shadow-cyan-600/20" data-i18n="btn_login_user">
-                    Login / Enter
+            <!-- Admin Actions -->
+            ${window.appState.isAdmin ? `
+              <div class="flex items-center gap-1">
+                <button onclick="openEditModal('${trick.id}')" class="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition" title="수정">
+                  <i class="fa-solid fa-pen"></i>
                 </button>
-            </form>
-
-            <!-- Admin Auth Form -->
-            <form id="adminAuthForm" onsubmit="handleAdminLogin(event)" class="space-y-4 hidden">
-                <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-300 flex items-start gap-2">
-                    <i class="fa-solid fa-shield-halved mt-0.5"></i>
-                    <span data-i18n="admin_passkey_notice">Enter administrator passkey to unlock full content management tools.</span>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="label_admin_passkey">Admin Passkey</label>
-                    <input type="password" id="adminPasskeyInput" required placeholder="Enter passkey..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-semibold py-2.5 rounded-xl text-sm transition-all shadow-md shadow-amber-500/20" data-i18n="btn_unlock_admin">
-                    Unlock Admin Access
+                <button onclick="deleteTrick('${trick.id}')" class="p-2 text-rose-500 hover:text-rose-700 transition" title="삭제">
+                  <i class="fa-solid fa-trash"></i>
                 </button>
-            </form>
+              </div>
+            ` : ''}
+          </div>
         </div>
-    </div>
+      `;
+    }
 
-    <!-- MODAL: Add / Edit Trick Modal -->
-    <div id="trickModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('trickModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+    // Local Storage Voting Protection (30 Days)
+    function isVoted(trickId) {
+      const votedMap = JSON.parse(localStorage.getItem('yo1a_voted_tricks') || '{}');
+      if (!votedMap[trickId]) return false;
+      const now = Date.now();
+      const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+      return (now - votedMap[trickId]) < thirtyDays;
+    }
 
-            <h3 id="trickModalTitle" class="text-lg font-bold text-slate-100 mb-4" data-i18n="modal_add_trick">Add New Trick</h3>
+    function recordVote(trickId) {
+      const votedMap = JSON.parse(localStorage.getItem('yo1a_voted_tricks') || '{}');
+      votedMap[trickId] = Date.now();
+      localStorage.setItem('yo1a_voted_tricks', JSON.stringify(votedMap));
+    }
 
-            <form id="trickForm" onsubmit="handleSaveTrick(event)" class="space-y-4">
-                <input type="hidden" id="trickId">
+    // Voting Functions
+    window.openVoteModal = function(id) {
+      const trick = window.appState.tricks.find(t => t.id === id);
+      if (!trick) return;
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="label_trick_title">Trick Title</label>
-                    <input type="text" id="trickTitleInput" required placeholder="e.g., Kwijibo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
-                </div>
+      window.appState.selectedTrickId = id;
+      document.getElementById('voteModalTrickTitle').innerText = trick.title;
+      document.getElementById('voteModalDiff').innerText = `Level ${trick.difficulty}`;
+      document.getElementById('voteModal').classList.remove('hidden');
+    };
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="label_difficulty">Difficulty</label>
-                        <select id="trickDifficultyInput" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
-                            <option value="1">Level 1 (Beginner)</option>
-                            <option value="2">Level 2 (Intermediate)</option>
-                            <option value="3">Level 3 (Advanced)</option>
-                            <option value="4">Level 4 (Expert)</option>
-                            <option value="5">Level 5 (Master)</option>
-                            <option value="5+">Level 5+ (Grandmaster)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="label_base_score">Base/Initial Score (0-5)</label>
-                        <input type="number" id="trickScoreInput" min="0" max="5" step="0.1" value="3.0" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
-                    </div>
-                </div>
+    window.closeVoteModal = function() {
+      document.getElementById('voteModal').classList.add('hidden');
+    };
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="label_youtube_url">YouTube URL or Embed ID</label>
-                    <input type="text" id="trickYoutubeInput" required placeholder="https://www.youtube.com/watch?v=... or Video ID" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500">
-                    <p class="text-[11px] text-slate-500 mt-1" data-i18n="youtube_help">Accepts YouTube standard URLs, Shorts links, or 11-character Video IDs.</p>
-                </div>
+    window.submitVote = async function() {
+      const id = window.appState.selectedTrickId;
+      const score = parseFloat(document.getElementById('voteScoreSelect').value);
+      const trick = window.appState.tricks.find(t => t.id === id);
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1" data-i18n="label_description">Description / Key Steps</label>
-                    <textarea id="trickDescInput" rows="3" required placeholder="Describe mounts, hops, string segment passes..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500"></textarea>
-                </div>
+      if (!trick || isNaN(score)) return;
 
-                <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
-                    <button type="button" onclick="closeModal('trickModal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200" data-i18n="btn_cancel">Cancel</button>
-                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs px-5 py-2 rounded-xl transition-all shadow-md shadow-cyan-600/20" data-i18n="btn_save_trick">Save Trick</button>
-                </div>
-            </form>
-        </div>
-    </div>
+      const newSum = (trick.scoreSum || 0) + score;
+      const newCount = (trick.ratingCount || 0) + 1;
 
-    <!-- Firebase JS SDK Imports (v11) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            doc, 
-            onSnapshot, 
-            setDoc, 
-            addDoc, 
-            updateDoc, 
-            deleteDoc, 
-            getDocs,
-            serverTimestamp 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+      // Update Local State
+      trick.scoreSum = newSum;
+      trick.ratingCount = newCount;
+      recordVote(id);
+      closeVoteModal();
+      renderTricks();
 
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDaWdDcxs2zZtuL7IDS-TxVTf8z7_uee0Y",
-            authDomain: "yoyopoint-f28c4.firebaseapp.com",
-            projectId: "yoyopoint-f28c4",
-            storageBucket: "yoyopoint-f28c4.firebasestorage.app",
-            messagingSenderId: "1071571356574",
-            appId: "1:1071571356574:web:e84ed1f0d30f50bd42648f",
-            measurementId: "G-0VEW1DTMPW"
-        };
+      // Sync Firestore
+      try {
+        const trickRef = doc(db, "artifacts", "yo-yo-1a-tricks", "public", "data", "tricks", id);
+        await updateDoc(trickRef, {
+          scoreSum: newSum,
+          ratingCount: newCount
+        });
+      } catch (err) {
+        console.warn("Firestore update notice:", err);
+      }
+    };
 
-        // Initialize Firebase & Firestore
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    // Search and Filter Event Handlers
+    window.handleSearch = function() {
+      const input = document.getElementById('searchInput');
+      window.appState.searchQuery = input.value;
+      
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (input.value) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      renderTricks();
+    };
 
-        // App State
-        let allTricks = [];
-        let ratingsMap = {}; // trickId -> { totalScore, count, userVotes: { userId: { score, timestamp } } }
-        let currentLang = 'ko';
-        let currentDiffFilter = 'ALL';
-        let searchQuery = '';
-        let currentUser = JSON.parse(localStorage.getItem('yoyopoint_user')) || null;
-        let isAdmin = localStorage.getItem('yoyopoint_admin') === 'true';
+    window.clearSearch = function() {
+      document.getElementById('searchInput').value = '';
+      window.appState.searchQuery = '';
+      document.getElementById('clearSearchBtn').classList.add('hidden');
+      renderTricks();
+    };
 
-        // i18n Translations Dictionary
-        const translations = {
-            ko: {
-                hero_tag: "공식 1A 스탠다드 채점 플랫폼",
-                hero_title: "기술을 마스터하고 점수를 표준화하세요",
-                hero_desc: "전 세계 플레이어들이 검증한 표준 1A 요요 트릭 튜토리얼, 난이도 및 평균 평가 점수를 실시간으로 확인하세요.",
-                search_placeholder: "트릭 검색 (예: Kwijibo, Trapeze)...",
-                trick_dictionary_title: "1A 트릭 사전",
-                add_new_trick: "트릭 추가",
-                loading_tricks: "Firestore 연결 및 트릭 동기화 중...",
-                footer_rights: "© 2026 YoYoPoint 1A Platform. 표준 트릭 점수 채점 시스템.",
-                footer_disclaimer: "모든 데이터는 Firebase Firestore를 통해 실시간으로 동기화됩니다.",
-                tab_user: "사용자 로그인",
-                tab_admin: "관리자 비밀번호",
-                label_username: "사용자 이름",
-                label_password: "비밀번호",
-                btn_login_user: "로그인 / 입장",
-                admin_passkey_notice: "관리자 패스키를 입력하면 트릭 추가/수정/삭제 권한이 부여됩니다.",
-                label_admin_passkey: "관리자 비밀번호",
-                btn_unlock_admin: "관리자 권한 해제",
-                modal_add_trick: "새 트릭 추가",
-                modal_edit_trick: "트릭 정보 수정",
-                label_trick_title: "트릭 명칭",
-                label_difficulty: "난이도",
-                label_base_score: "기본 점수 (0-5점)",
-                label_youtube_url: "YouTube URL 또는 동영상 ID",
-                youtube_help: "YouTube 일반 링크, Shorts 링크 또는 11자리 비디오 ID 입력 지원",
-                label_description: "트릭 설명 및 주요 스텝",
-                btn_cancel: "취소",
-                btn_save_trick: "트릭 저장",
-                user_login: "로그인",
-                admin_active: "관리자 모드 Active",
-                logout: "로그아웃",
-                rate_this_trick: "내 채점하기",
-                rated_already: "채점 완료 (30일 후 재투표 가능)",
-                days_left: "일 남음",
-                login_to_rate: "채점하려면 로그인하세요",
-                votes: "표",
-                edit: "수정",
-                delete: "삭제",
-                no_tricks_found: "검색 결과에 맞는 트릭이 없습니다."
-            },
-            en: {
-                hero_tag: "Official 1A Standardized Scoring",
-                hero_title: "Master the String. Standardize the Score.",
-                hero_desc: "Explore standardized 1A yo-yo trick tutorials, ratings, and difficulty breakdowns contributed by players worldwide.",
-                search_placeholder: "Search tricks (e.g., Kwijibo, Trapeze)...",
-                trick_dictionary_title: "1A Trick Dictionary",
-                add_new_trick: "Add Trick",
-                loading_tricks: "Connecting to Firestore & Syncing Tricks...",
-                footer_rights: "© 2026 YoYoPoint 1A Platform. Standardized Trick Score Registry.",
-                footer_disclaimer: "All trick ratings and updates sync in real-time across all devices via Firebase Firestore.",
-                tab_user: "User Login",
-                tab_admin: "Admin Passkey",
-                label_username: "Username",
-                label_password: "Password",
-                btn_login_user: "Login / Enter",
-                admin_passkey_notice: "Enter administrator passkey to unlock full content management tools.",
-                label_admin_passkey: "Admin Passkey",
-                btn_unlock_admin: "Unlock Admin Access",
-                modal_add_trick: "Add New Trick",
-                modal_edit_trick: "Edit Trick Details",
-                label_trick_title: "Trick Title",
-                label_difficulty: "Difficulty",
-                label_base_score: "Base Score (0-5)",
-                label_youtube_url: "YouTube URL or Embed ID",
-                youtube_help: "Supports standard YouTube links, Shorts, or 11-char Video IDs.",
-                label_description: "Description / Key Steps",
-                btn_cancel: "Cancel",
-                btn_save_trick: "Save Trick",
-                user_login: "Login",
-                admin_active: "Admin Active",
-                logout: "Logout",
-                rate_this_trick: "Submit Rating",
-                rated_already: "Voted (Re-vote in 30 days)",
-                days_left: "days left",
-                login_to_rate: "Login to submit rating",
-                votes: "votes",
-                edit: "Edit",
-                delete: "Delete",
-                no_tricks_found: "No tricks found matching your criteria."
-            },
-            ja: {
-                hero_tag: "公式1A標準採点プラットフォーム",
-                hero_title: "ストリングをマスターし、スコアを標準化",
-                hero_desc: "世界中のプレイヤーによる標準化された1Aヨーヨートリックのチュートリアル、難易度、評価スコアをリアルタイムで確認。",
-                search_placeholder: "トリックを検索 (例: Kwijibo, Trapeze)...",
-                trick_dictionary_title: "1A トリック辞書",
-                add_new_trick: "トリック追加",
-                loading_tricks: "Firestoreに接続中...",
-                footer_rights: "© 2026 YoYoPoint 1A Platform. 標準トリック採点システム",
-                footer_disclaimer: "すべてのデータはFirebase Firestoreを介してリアルタイムで同期されます。",
-                tab_user: "ユーザーログイン",
-                tab_admin: "管理者パスキー",
-                label_username: "ユーザー名",
-                label_password: "パスワード",
-                btn_login_user: "ログイン",
-                admin_passkey_notice: "管理者パスキーを入力してコンテンツ編集権限を解除します。",
-                label_admin_passkey: "管理者パスキー",
-                btn_unlock_admin: "管理者権限解除",
-                modal_add_trick: "新規トリック追加",
-                modal_edit_trick: "トリック情報編集",
-                label_trick_title: "トリック名",
-                label_difficulty: "難易度",
-                label_base_score: "基本スコア (0-5)",
-                label_youtube_url: "YouTube URL または 動画ID",
-                youtube_help: "YouTubeの標準URL、Shorts、または11桁の動画IDに対応",
-                label_description: "トリックの説明と手順",
-                btn_cancel: "キャンセル",
-                btn_save_trick: "保存する",
-                user_login: "ログイン",
-                admin_active: "管理者モード Active",
-                logout: "ログアウト",
-                rate_this_trick: "評価を送信",
-                rated_already: "投票済み (30日後に再投票可能)",
-                days_left: "日残り",
-                login_to_rate: "評価するにはログインしてください",
-                votes: "票",
-                edit: "編集",
-                delete: "削除",
-                no_tricks_found: "該当するトリックが見つかりません。"
-            },
-            zh: {
-                hero_tag: "官方 1A 打分标准化平台",
-                hero_title: "精通招式，标准化评分",
-                hero_desc: "实时查看由全球玩家验证的 1A 悠悠球招式教学、难度分类与平均评分。",
-                search_placeholder: "搜索招式 (例如 Kwijibo, Trapeze)...",
-                trick_dictionary_title: "1A 招式词典",
-                add_new_trick: "添加招式",
-                loading_tricks: "正在连接 Firestore 并同步数据...",
-                footer_rights: "© 2026 YoYoPoint 1A Platform. 标准化招式打分系统",
-                footer_disclaimer: "所有评分与修改均通过 Firebase Firestore 实时全网同步。",
-                tab_user: "用户登录",
-                tab_admin: "管理员密钥",
-                label_username: "用户名",
-                label_password: "密码",
-                btn_login_user: "登录 / 进入",
-                admin_passkey_notice: "输入管理员密钥以解锁添加、修改与删除权限。",
-                label_admin_passkey: "管理员密钥",
-                btn_unlock_admin: "解锁管理员权限",
-                modal_add_trick: "添加新招式",
-                modal_edit_trick: "编辑招式信息",
-                label_trick_title: "招式名称",
-                label_difficulty: "难度级别",
-                label_base_score: "基础分 (0-5分)",
-                label_youtube_url: "YouTube 链接或视频 ID",
-                youtube_help: "支持普通链接、Shorts 链接或 11 位 Video ID",
-                label_description: "招式说明与步骤",
-                btn_cancel: "取消",
-                btn_save_trick: "保存招式",
-                user_login: "登录",
-                admin_active: "管理员模式 Active",
-                logout: "退出登录",
-                rate_this_trick: "提交评分",
-                rated_already: "已评分 (30天后可重新投票)",
-                days_left: "天后可投",
-                login_to_rate: "请先登录后再评分",
-                votes: "票",
-                edit: "编辑",
-                delete: "删除",
-                no_tricks_found: "未找到符合条件的招式。"
-            }
-        };
+    window.resetSearch = function() {
+      clearSearch();
+      filterDifficulty('all');
+    };
 
-        // Seed Data for Empty Firestore Initializer
-        const defaultSeedTricks = [
-            {
-                title: "Trapeze",
-                difficulty: "1",
-                score: 1.5,
-                youtubeUrl: "https://www.youtube.com/watch?v=348S1egO4bU",
-                description: "The fundamental 1A mount. Throw a strong breakaway, swing the yo-yo over your non-throwhand index finger, and land it cleanly on the string."
-            },
-            {
-                title: "Double or Nothing",
-                difficulty: "2",
-                score: 2.8,
-                youtubeUrl: "https://www.youtube.com/watch?v=RIsV6kClp1g",
-                description: "Swing the yo-yo around both index fingers sequentially, wrapping the string twice before landing on the outermost front string segment."
-            },
-            {
-                title: "Kwijibo",
-                difficulty: "3",
-                score: 3.9,
-                youtubeUrl: "https://www.youtube.com/watch?v=S0eB7iU1g5w",
-                description: "A classic iconic hop trick! Start in a 1.5 mount, hop the yo-yo while crossing hands, land into a double on, then hop and uncross back into a trapeze."
-            },
-            {
-                title: "Spirit Bomb",
-                difficulty: "4",
-                score: 4.6,
-                youtubeUrl: "https://www.youtube.com/watch?v=f7B23eY-28Y",
-                description: "Advanced wrist mount trick featuring explosive pops through string triangles and precise hand positioning."
-            }
-        ];
-
-        // Initialize Realtime Listeners
-        function initRealtimeSync() {
-            const tricksCollection = collection(db, 'tricks');
-
-            onSnapshot(tricksCollection, (snapshot) => {
-                if (snapshot.empty) {
-                    console.log("No tricks found in Firestore. Populating seed data...");
-                    seedInitialTricks();
-                    return;
-                }
-
-                allTricks = [];
-                snapshot.forEach(docSnap => {
-                    allTricks.push({
-                        id: docSnap.id,
-                        ...docSnap.data()
-                    });
-                });
-
-                renderTricks();
-            }, (error) => {
-                console.error("Firestore sync error:", error);
-            });
+    window.filterDifficulty = function(diff) {
+      window.appState.currentFilter = diff;
+      document.querySelectorAll('.diff-btn').forEach(btn => {
+        if (btn.getAttribute('data-diff') === diff) {
+          btn.className = "diff-btn active px-2.5 py-1 rounded-md bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 font-semibold transition";
+        } else {
+          btn.className = "diff-btn px-2.5 py-1 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition";
         }
+      });
+      renderTricks();
+    };
 
-        // Seed Default Data
-        async function seedInitialTricks() {
-            const tricksCollection = collection(db, 'tricks');
-            for (const trick of defaultSeedTricks) {
-                await addDoc(tricksCollection, {
-                    ...trick,
-                    ratingSum: trick.score,
-                    ratingCount: 1,
-                    userVotes: {},
-                    createdAt: serverTimestamp()
-                });
-            }
-        }
+    window.handleSortChange = function() {
+      window.appState.sortOption = document.getElementById('sortSelect').value;
+      renderTricks();
+    };
 
-        // Extract YouTube ID from various link types
-        function extractYouTubeId(url) {
-            if (!url) return '';
-            if (url.length === 11 && !url.includes('/')) return url; // Already ID
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : '';
-        }
+    // Language Switcher
+    window.changeLanguage = function(lang) {
+      window.appState.currentLang = lang;
+      const t = translations[lang] || translations.ko;
 
-        // Helper i18n renderer
-        window.t = function(key) {
-            return translations[currentLang][key] || key;
-        };
+      document.getElementById('heroTitle').innerText = t.heroTitle;
+      document.getElementById('heroSubtitle').innerText = t.heroSubtitle;
+      document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+      document.getElementById('filterLabel').innerText = t.filterLabel;
+      document.getElementById('addTrickBtnText').innerText = t.addTrickBtn;
+      document.getElementById('tricksFoundText').innerText = t.tricksFound;
+      document.getElementById('emptyTitle').innerText = t.emptyTitle;
+      document.getElementById('emptyDesc').innerText = t.emptyDesc;
+      document.getElementById('footerCopy').innerText = t.footerCopy;
+      document.getElementById('userAuthNotice').innerHTML = `<i class="fa-solid fa-circle-info mr-1.5 text-slate-400"></i> ${t.userNotice}`;
 
-        window.changeLanguage = function(lang) {
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    el.innerText = translations[lang][key];
-                }
-            });
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (translations[lang][key]) {
-                    el.placeholder = translations[lang][key];
-                }
-            });
-            renderTricks();
-            renderAuthBar();
-        };
+      if (!window.appState.isAdmin) {
+        document.getElementById('authBtnText').innerText = t.login;
+      }
 
-        // Render Top Auth Bar
-        function renderAuthBar() {
-            const container = document.getElementById('authBar');
-            if (isAdmin) {
-                container.innerHTML = `
-                    <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5">
-                        <i class="fa-solid fa-shield-halved text-[11px]"></i>
-                        ${t('admin_active')}
-                    </span>
-                    <button onclick="logout()" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800 transition-all font-medium">
-                        ${t('logout')}
-                    </button>
-                `;
-                document.getElementById('adminControlsHeader').classList.remove('hidden');
-            } else if (currentUser) {
-                container.innerHTML = `
-                    <span class="text-xs bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5">
-                        <i class="fa-solid fa-user text-[11px]"></i>
-                        ${currentUser.username}
-                    </span>
-                    <button onclick="logout()" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800 transition-all font-medium">
-                        ${t('logout')}
-                    </button>
-                `;
-                document.getElementById('adminControlsHeader').classList.add('hidden');
-            } else {
-                container.innerHTML = `
-                    <button onclick="openModal('authModal')" class="text-xs bg-cyan-600 hover:bg-cyan-500 text-white font-semibold px-3 py-1.5 rounded-lg shadow-md shadow-cyan-600/20 transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-right-to-bracket text-[11px]"></i>
-                        ${t('user_login')}
-                    </button>
-                `;
-                document.getElementById('adminControlsHeader').classList.add('hidden');
-            }
-        }
+      renderTricks();
+    };
 
-        // Filtering & Exact Length Match Sorting
-        window.handleSearchInput = function() {
-            searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
-            renderTricks();
-        };
+    // Auth & Admin Modal
+    window.openAuthModal = function() {
+      document.getElementById('authModal').classList.remove('hidden');
+    };
 
-        window.setDifficultyFilter = function(diff) {
-            currentDiffFilter = diff;
-            document.querySelectorAll('.diff-btn').forEach(btn => {
-                btn.classList.remove('bg-cyan-600', 'text-white');
-                btn.classList.add('text-slate-400');
-            });
-            const activeBtn = document.getElementById(`diff-${diff}`);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-cyan-600', 'text-white');
-                activeBtn.classList.remove('text-slate-400');
-            }
-            renderTricks();
-        };
+    window.closeAuthModal = function() {
+      document.getElementById('authModal').classList.add('hidden');
+    };
 
-        window.resetFilters = function() {
-            searchQuery = '';
-            document.getElementById('searchInput').value = '';
-            setDifficultyFilter('ALL');
-        };
+    window.switchAuthTab = function(tab) {
+      const userTab = document.getElementById('userTabBtn');
+      const adminTab = document.getElementById('adminTabBtn');
+      const userContent = document.getElementById('userAuthContent');
+      const adminContent = document.getElementById('adminAuthContent');
 
-        // Main Render Function for Trick Cards
-        function renderTricks() {
-            const grid = document.getElementById('tricksGrid');
-            const countBadge = document.getElementById('trickCountBadge');
+      if (tab === 'user') {
+        userTab.className = "flex-1 py-2.5 font-bold text-sm text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white transition";
+        adminTab.className = "flex-1 py-2.5 font-medium text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border-b-2 border-transparent transition";
+        userContent.classList.remove('hidden');
+        adminContent.classList.add('hidden');
+      } else {
+        adminTab.className = "flex-1 py-2.5 font-bold text-sm text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white transition";
+        userTab.className = "flex-1 py-2.5 font-medium text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 border-b-2 border-transparent transition";
+        adminContent.classList.remove('hidden');
+        userContent.classList.add('hidden');
+      }
+    };
 
-            // 1. Filter Tricks
-            let filtered = allTricks.filter(trick => {
-                const matchesDiff = (currentDiffFilter === 'ALL') || (trick.difficulty === currentDiffFilter);
-                const matchesSearch = !searchQuery || 
-                    trick.title.toLowerCase().includes(searchQuery) || 
-                    trick.description.toLowerCase().includes(searchQuery);
-                return matchesDiff && matchesSearch;
-            });
+    window.verifyAdmin = function() {
+      const input = document.getElementById('adminPassInput').value;
+      const err = document.getElementById('adminErrorMsg');
 
-            // 2. Sort Tricks: Priority to length match when searching keyword, then title
-            if (searchQuery) {
-                filtered.sort((a, b) => {
-                    const titleA = a.title.toLowerCase();
-                    const titleB = b.title.toLowerCase();
+      if (input === 'leowner') {
+        window.appState.isAdmin = true;
+        err.classList.add('hidden');
+        closeAuthModal();
 
-                    // Check exact string length distance from search query
-                    const diffLenA = Math.abs(titleA.length - searchQuery.length);
-                    const diffLenB = Math.abs(titleB.length - searchQuery.length);
+        // Update UI for Admin
+        const t = translations[window.appState.currentLang] || translations.ko;
+        document.getElementById('authBtnText').innerText = t.adminActive;
+        document.getElementById('addTrickBtn').classList.remove('hidden');
+        document.getElementById('addTrickBtn').classList.add('flex');
+        
+        renderTricks();
+      } else {
+        err.classList.remove('hidden');
+      }
+    };
 
-                    // StartsWith preference
-                    const startsA = titleA.startsWith(searchQuery);
-                    const startsB = titleB.startsWith(searchQuery);
+    // Add / Edit / Delete Tricks
+    window.openAddModal = function() {
+      document.getElementById('addEditModalTitle').innerText = "새 요요 기술 등록";
+      document.getElementById('editingTrickId').value = "";
+      document.getElementById('addEditForm').reset();
+      document.getElementById('addEditModal').classList.remove('hidden');
+    };
 
-                    if (startsA && !startsB) return -1;
-                    if (!startsA && startsB) return 1;
+    window.openEditModal = function(id) {
+      const trick = window.appState.tricks.find(t => t.id === id);
+      if (!trick) return;
 
-                    if (diffLenA !== diffLenB) {
-                        return diffLenA - diffLenB; // Closest string length first
-                    }
+      document.getElementById('addEditModalTitle').innerText = "기술 정보 수정";
+      document.getElementById('editingTrickId').value = trick.id;
+      document.getElementById('formTitle').value = trick.title;
+      document.getElementById('formDifficulty').value = trick.difficulty;
+      document.getElementById('formInitialScore').value = trick.ratingCount > 0 ? (trick.scoreSum / trick.ratingCount).toFixed(1) : 3.0;
+      document.getElementById('formVideoUrl').value = trick.youtubeId;
+      document.getElementById('formDescription').value = trick.description || '';
 
-                    return titleA.localeCompare(titleB);
-                });
-            }
+      document.getElementById('addEditModal').classList.remove('hidden');
+    };
 
-            countBadge.innerText = filtered.length;
+    window.closeAddEditModal = function() {
+      document.getElementById('addEditModal').classList.add('hidden');
+    };
 
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full py-16 text-center bg-slate-900/50 rounded-2xl border border-slate-800">
-                        <i class="fa-solid fa-ghost text-4xl text-slate-600 mb-3"></i>
-                        <p class="text-slate-400 text-sm font-medium">${t('no_tricks_found')}</p>
-                    </div>
-                `;
-                return;
-            }
+    window.handleAddEditSubmit = async function(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editingTrickId').value;
+      const title = document.getElementById('formTitle').value;
+      const difficulty = document.getElementById('formDifficulty').value;
+      const initScore = parseFloat(document.getElementById('formInitialScore').value) || 3.0;
+      const videoUrl = document.getElementById('formVideoUrl').value;
+      const description = document.getElementById('formDescription').value;
 
-            grid.innerHTML = filtered.map(trick => {
-                const videoId = extractYouTubeId(trick.youtubeUrl);
-                const avgScore = trick.ratingCount > 0 
-                    ? (trick.ratingSum / trick.ratingCount).toFixed(1) 
-                    : Number(trick.score || 0).toFixed(1);
+      const trickId = editId || title.toLowerCase().replace(/[^a-z0-0]/g, '-') + '-' + Date.now();
 
-                const userVotes = trick.userVotes || {};
-                const currentUserId = currentUser ? currentUser.username : null;
-                const userLastVote = currentUserId ? userVotes[currentUserId] : null;
+      const trickData = {
+        id: trickId,
+        title: title,
+        difficulty: difficulty,
+        scoreSum: editId ? (window.appState.tricks.find(t => t.id === editId)?.scoreSum || initScore) : initScore,
+        ratingCount: editId ? (window.appState.tricks.find(t => t.id === editId)?.ratingCount || 1) : 1,
+        youtubeId: videoUrl,
+        description: description
+      };
 
-                // Vote restriction logic (30 days countdown)
-                let canVote = true;
-                let daysRemaining = 0;
+      if (!editId) {
+        window.appState.tricks.push(trickData);
+      } else {
+        const idx = window.appState.tricks.findIndex(t => t.id === editId);
+        if (idx !== -1) window.appState.tricks[idx] = trickData;
+      }
 
-                if (userLastVote && userLastVote.timestamp) {
-                    const lastVoteTime = new Date(userLastVote.timestamp.seconds ? userLastVote.timestamp.seconds * 1000 : userLastVote.timestamp).getTime();
-                    const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
-                    const timePassed = Date.now() - lastVoteTime;
+      closeAddEditModal();
+      renderTricks();
 
-                    if (timePassed < thirtyDaysInMs) {
-                        canVote = false;
-                        daysRemaining = Math.ceil((thirtyDaysInMs - timePassed) / (1000 * 60 * 60 * 24));
-                    }
-                }
+      // Cloud Firestore Sync
+      try {
+        const docRef = doc(db, "artifacts", "yo-yo-1a-tricks", "public", "data", "tricks", trickId);
+        await setDoc(docRef, trickData);
+      } catch (err) {
+        console.warn("Firestore save notice:", err);
+      }
+    };
 
-                return `
-                    <div class="glass-panel rounded-2xl overflow-hidden shadow-xl border border-slate-800/80 flex flex-col justify-between hover:border-slate-700 transition-all duration-300">
-                        <!-- Card Top: Video Embed -->
-                        <div>
-                            <div class="relative w-full aspect-video bg-black/60 overflow-hidden">
-                                ${videoId ? `
-                                    <iframe 
-                                        src="https://www.youtube-nocookie.com/embed/${videoId}" 
-                                        title="${trick.title}" 
-                                        class="w-full h-full border-0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                        allowfullscreen>
-                                    </iframe>
-                                ` : `
-                                    <div class="w-full h-full flex items-center justify-center text-slate-600">
-                                        <i class="fa-solid fa-video-slash text-3xl"></i>
-                                    </div>
-                                `}
-                                <!-- Difficulty Badge -->
-                                <div class="absolute top-3 left-3 bg-slate-950/90 border border-slate-700/80 text-cyan-400 font-extrabold text-xs px-2.5 py-1 rounded-lg backdrop-blur-md shadow-md">
-                                    Lv. ${trick.difficulty}
-                                </div>
-                            </div>
+    window.deleteTrick = async function(id) {
+      window.appState.tricks = window.appState.tricks.filter(t => t.id !== id);
+      renderTricks();
 
-                            <!-- Card Body -->
-                            <div class="p-5">
-                                <div class="flex items-start justify-between gap-2 mb-2">
-                                    <h4 class="text-lg font-bold text-slate-100 leading-snug">${trick.title}</h4>
-                                    <!-- Score Display -->
-                                    <div class="flex items-center gap-1.5 bg-cyan-950/50 border border-cyan-800/40 px-2.5 py-1 rounded-xl text-xs font-bold text-cyan-300">
-                                        <i class="fa-solid fa-star text-amber-400"></i>
-                                        <span>${avgScore}</span>
-                                        <span class="text-[10px] text-slate-400 font-normal">(${trick.ratingCount || 1} ${t('votes')})</span>
-                                    </div>
-                                </div>
-
-                                <p class="text-xs text-slate-300 leading-relaxed line-clamp-3 mb-4">${trick.description}</p>
-                            </div>
-                        </div>
-
-                        <!-- Card Footer: Rating & Admin Options -->
-                        <div class="p-5 pt-0 border-t border-slate-800/50">
-                            <!-- Star Voting Controls -->
-                            <div class="mt-3">
-                                ${!currentUser ? `
-                                    <p class="text-[11px] text-slate-500 italic text-center py-1">
-                                        <button onclick="openModal('authModal')" class="text-cyan-400 underline hover:text-cyan-300 font-medium">${t('login_to_rate')}</button>
-                                    </p>
-                                ` : canVote ? `
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-xs text-slate-400 font-medium">${t('rate_this_trick')}:</span>
-                                        <div class="star-rating flex items-center gap-1 text-amber-400 text-sm">
-                                            ${[1, 2, 3, 4, 5].map(star => `
-                                                <i class="fa-regular fa-star hover:fa-solid" onclick="submitRating('${trick.id}', ${star})"></i>
-                                            `).join('')}
-                                        </div>
-                                    </div>
-                                ` : `
-                                    <div class="p-2 bg-slate-950/60 rounded-xl border border-slate-800 text-center">
-                                        <p class="text-[11px] text-emerald-400 font-semibold flex items-center justify-center gap-1">
-                                            <i class="fa-solid fa-circle-check text-[10px]"></i>
-                                            ${t('rated_already')} (${daysRemaining} ${t('days_left')})
-                                        </p>
-                                    </div>
-                                `}
-                            </div>
-
-                            <!-- Admin Actions -->
-                            ${isAdmin ? `
-                                <div class="flex items-center justify-end gap-2 mt-4 pt-3 border-t border-slate-800">
-                                    <button onclick="openEditModal('${trick.id}')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 transition-all">
-                                        <i class="fa-solid fa-pen-to-square text-[11px]"></i>
-                                        ${t('edit')}
-                                    </button>
-                                    <button onclick="deleteTrick('${trick.id}')" class="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold flex items-center gap-1 transition-all">
-                                        <i class="fa-solid fa-trash text-[11px]"></i>
-                                        ${t('delete')}
-                                    </button>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Submit Star Rating & Update Firestore Standard Score
-        window.submitRating = async function(trickId, score) {
-            if (!currentUser) {
-                openModal('authModal');
-                return;
-            }
-
-            const trick = allTricks.find(t => t.id === trickId);
-            if (!trick) return;
-
-            const userVotes = trick.userVotes || {};
-            const currentCount = trick.ratingCount || 0;
-            const currentSum = trick.ratingSum || Number(trick.score || 0);
-
-            // Update user vote history
-            userVotes[currentUser.username] = {
-                score: score,
-                timestamp: new Date()
-            };
-
-            const newCount = currentCount + 1;
-            const newSum = currentSum + score;
-            const newAvg = Number((newSum / newCount).toFixed(1));
-
-            try {
-                const trickRef = doc(db, 'tricks', trickId);
-                await updateDoc(trickRef, {
-                    ratingSum: newSum,
-                    ratingCount: newCount,
-                    score: newAvg,
-                    userVotes: userVotes
-                });
-            } catch (err) {
-                console.error("Error submitting rating:", err);
-            }
-        };
-
-        // Open Modal Helper
-        window.openModal = function(id) {
-            document.getElementById(id).classList.remove('hidden');
-        };
-
-        window.closeModal = function(id) {
-            document.getElementById(id).classList.add('hidden');
-        };
-
-        window.switchAuthTab = function(type) {
-            const tabUser = document.getElementById('tabUserBtn');
-            const tabAdmin = document.getElementById('tabAdminBtn');
-            const userForm = document.getElementById('userAuthForm');
-            const adminForm = document.getElementById('adminAuthForm');
-
-            if (type === 'user') {
-                tabUser.className = "flex-1 py-2 font-semibold text-sm border-b-2 border-cyan-500 text-cyan-400";
-                tabAdmin.className = "flex-1 py-2 font-semibold text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200";
-                userForm.classList.remove('hidden');
-                adminForm.classList.add('hidden');
-            } else {
-                tabAdmin.className = "flex-1 py-2 font-semibold text-sm border-b-2 border-amber-500 text-amber-400";
-                tabUser.className = "flex-1 py-2 font-semibold text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200";
-                adminForm.classList.remove('hidden');
-                userForm.classList.add('hidden');
-            }
-        };
-
-        // User Login Handler
-        window.handleUserLogin = function(e) {
-            e.preventDefault();
-            const username = document.getElementById('authUsername').value.trim();
-            if (!username) return;
-
-            currentUser = { username };
-            isAdmin = false;
-            localStorage.setItem('yoyopoint_user', JSON.stringify(currentUser));
-            localStorage.removeItem('yoyopoint_admin');
-
-            closeModal('authModal');
-            renderAuthBar();
-            renderTricks();
-        };
-
-        // Admin Passkey Authentication
-        window.handleAdminLogin = function(e) {
-            e.preventDefault();
-            const passkey = document.getElementById('adminPasskeyInput').value;
-
-            if (passkey === 'leowner') {
-                isAdmin = true;
-                currentUser = { username: 'Admin' };
-                localStorage.setItem('yoyopoint_admin', 'true');
-                localStorage.setItem('yoyopoint_user', JSON.stringify(currentUser));
-
-                closeModal('authModal');
-                document.getElementById('adminPasskeyInput').value = '';
-                renderAuthBar();
-                renderTricks();
-            } else {
-                alert('Invalid Admin Passkey!');
-            }
-        };
-
-        window.logout = function() {
-            currentUser = null;
-            isAdmin = false;
-            localStorage.removeItem('yoyopoint_user');
-            localStorage.removeItem('yoyopoint_admin');
-            renderAuthBar();
-            renderTricks();
-        };
-
-        // Open Add Trick Modal
-        window.openAddModal = function() {
-            document.getElementById('trickModalTitle').innerText = t('modal_add_trick');
-            document.getElementById('trickForm').reset();
-            document.getElementById('trickId').value = '';
-            openModal('trickModal');
-        };
-
-        // Open Edit Trick Modal
-        window.openEditModal = function(id) {
-            const trick = allTricks.find(t => t.id === id);
-            if (!trick) return;
-
-            document.getElementById('trickModalTitle').innerText = t('modal_edit_trick');
-            document.getElementById('trickId').value = trick.id;
-            document.getElementById('trickTitleInput').value = trick.title;
-            document.getElementById('trickDifficultyInput').value = trick.difficulty;
-            document.getElementById('trickScoreInput').value = trick.score;
-            document.getElementById('trickYoutubeInput').value = trick.youtubeUrl;
-            document.getElementById('trickDescInput').value = trick.description;
-
-            openModal('trickModal');
-        };
-
-        // Save Trick (Add or Update in Firestore)
-        window.handleSaveTrick = async function(e) {
-            e.preventDefault();
-            if (!isAdmin) return;
-
-            const id = document.getElementById('trickId').value;
-            const title = document.getElementById('trickTitleInput').value.trim();
-            const difficulty = document.getElementById('trickDifficultyInput').value;
-            const score = parseFloat(document.getElementById('trickScoreInput').value);
-            const youtubeUrl = document.getElementById('trickYoutubeInput').value.trim();
-            const description = document.getElementById('trickDescInput').value.trim();
-
-            const trickData = {
-                title,
-                difficulty,
-                score,
-                youtubeUrl,
-                description
-            };
-
-            try {
-                if (id) {
-                    // Update existing
-                    const docRef = doc(db, 'tricks', id);
-                    await updateDoc(docRef, trickData);
-                } else {
-                    // Create new
-                    await addDoc(collection(db, 'tricks'), {
-                        ...trickData,
-                        ratingSum: score,
-                        ratingCount: 1,
-                        userVotes: {},
-                        createdAt: serverTimestamp()
-                    });
-                }
-                closeModal('trickModal');
-            } catch (err) {
-                console.error("Error saving trick to Firestore:", err);
-            }
-        };
-
-        // Delete Trick from Firestore
-        window.deleteTrick = async function(id) {
-            if (!isAdmin) return;
-            if (confirm("Are you sure you want to delete this trick? This action cannot be undone.")) {
-                try {
-                    await deleteDoc(doc(db, 'tricks', id));
-                } catch (err) {
-                    console.error("Error deleting trick:", err);
-                }
-            }
-        };
-
-        // Initialize App on Load
-        window.onload = function() {
-            renderAuthBar();
-            initRealtimeSync();
-        };
-    </script>
+      try {
+        const docRef = doc(db, "artifacts", "yo-yo-1a-tricks", "public", "data", "tricks", id);
+        await deleteDoc(docRef);
+      } catch (err) {
+        console.warn("Firestore delete notice:", err);
+      }
+    };
+  </script>
 </body>
 </html>
