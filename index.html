@@ -1,10 +1,643 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>내 첫 웹사이트</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yo-Yo 1A Trick Score Standardization Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .aspect-video { aspect-ratio: 16 / 9; }
+    </style>
 </head>
-<body>
-    <h1>안녕하세요! GitHub Pages로 만든 웹사이트입니다.</h1>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-[#00E5FF] fa-compact-disc text-2xl text-cyan-400 animate-spin-slow"></i>
+                <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                    Yo-Yo 1A Score Standards
+                </h1>
+            </div>
+
+            <!-- Global Controls: Language & Auth -->
+            <div class="flex items-center space-x-3">
+                <!-- Language Selector -->
+                <div class="relative">
+                    <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-700 border border-slate-600 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-cyan-500 outline-none">
+                        <option value="ko">🇰🇷 한국어</option>
+                        <option value="en">🇺🇸 English</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="ja">🇯🇵 日本語</option>
+                    </select>
+                </div>
+
+                <!-- User Auth Area -->
+                <div id="authContainer" class="flex items-center space-x-2">
+                    <!-- Dynamic rendering by JS -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- Search & Control Panel -->
+        <section class="mb-8">
+            <div class="bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur-md">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-1/2">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="searchInput" oninput="handleSearch()" placeholder="기술 이름을 검색하세요..." 
+                            class="w-full pl-11 pr-4 py-3 bg-slate-900/90 border border-slate-600 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition">
+                    </div>
+
+                    <!-- Filter / Stats -->
+                    <div class="flex items-center space-x-4 w-full md:w-auto justify-end">
+                        <span id="resultCount" class="text-sm font-medium text-slate-400 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-700">
+                            총 0개의 기술
+                        </span>
+                        <button id="addTrickBtn" onclick="openAddModal()" class="hidden bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl flex items-center gap-2 transition">
+                            <i class="fa-solid fa-plus"></i>
+                            <span data-i18n="addTrick">기술 추가</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trick Cards Grid -->
+        <section id="trickGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic trick cards rendered here -->
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 border-t border-slate-700 py-6 text-center text-xs text-slate-400 mt-auto">
+        <p>© 2026 Yo-Yo 1A Standardization Project. Admin Passkey: <code class="text-cyan-400">leowner</code></p>
+    </footer>
+
+    <!-- Auth Modal (Login / Register / Admin) -->
+    <div id="authModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md relative shadow-2xl">
+            <button onclick="closeModal('authModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h2 id="modalTitle" class="text-xl font-bold mb-4 text-cyan-400">로그인</h2>
+
+            <!-- Toggle Auth Tabs -->
+            <div class="flex border-b border-slate-700 mb-4 text-sm">
+                <button onclick="switchAuthTab('user')" id="tabUser" class="flex-1 py-2 font-semibold text-cyan-400 border-b-2 border-cyan-400">일반 회원</button>
+                <button onclick="switchAuthTab('admin')" id="tabAdmin" class="flex-1 py-2 font-semibold text-slate-400 border-b-2 border-transparent">관리자</button>
+            </div>
+
+            <!-- Form -->
+            <form id="authForm" onsubmit="handleAuthSubmit(event)">
+                <div id="userFields">
+                    <label class="block text-xs font-medium text-slate-300 mb-1">아이디</label>
+                    <input type="text" id="authUsername" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm mb-3 text-slate-100 outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">비밀번호</label>
+                    <input type="password" id="authPassword" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm mb-4 text-slate-100 outline-none focus:border-cyan-500">
+                </div>
+                <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-lg transition text-sm">
+                    확인
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Trick Modal (Admin Only) -->
+    <div id="trickModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-lg relative shadow-2xl">
+            <button onclick="closeModal('trickModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h2 id="trickModalTitle" class="text-xl font-bold mb-4 text-cyan-400">새 기술 추가</h2>
+
+            <form onsubmit="handleTrickSubmit(event)" class="space-y-3">
+                <input type="hidden" id="editTrickId">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">기술 이름</label>
+                    <input type="text" id="trickName" required class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">난이도</label>
+                    <select id="trickDifficulty" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100">
+                        <option value="초급">초급 (Beginner)</option>
+                        <option value="중급">중급 (Intermediate)</option>
+                        <option value="고급">고급 (Advanced)</option>
+                        <option value="마스터">마스터 (Master)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">초기 점수 (0~5)</label>
+                    <input type="number" id="trickInitialScore" min="0" max="5" step="0.1" value="3.0" required class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">유튜브 링크 또는 영상 ID</label>
+                    <input type="text" id="trickVideoUrl" placeholder="https://www.youtube.com/watch?v=... 또는 ID" required class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">설명</label>
+                    <textarea id="trickDesc" rows="2" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 rounded-lg transition text-sm mt-2">
+                    저장하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // --- i18n Translations ---
+        const translations = {
+            ko: {
+                searchPlaceholder: "기술 이름을 검색하세요...",
+                totalTricks: "총 {count}개의 기술",
+                addTrick: "기술 추가",
+                login: "로그인",
+                logout: "로그아웃",
+                rateBtn: "점수 평가",
+                ratedMsg: "평가완료 (다음 평가까지 {days}일)",
+                loginToRate: "로그인 후 평가 가능",
+                adminOverride: "점수 강제 변경",
+                delete: "삭제",
+                edit: "수정",
+                diffBeginner: "초급",
+                diffIntermediate: "중급",
+                diffAdvanced: "고급",
+                diffMaster: "마스터"
+            },
+            en: {
+                searchPlaceholder: "Search trick name...",
+                totalTricks: "Total {count} tricks",
+                addTrick: "Add Trick",
+                login: "Login",
+                logout: "Logout",
+                rateBtn: "Submit Rate",
+                ratedMsg: "Rated ({days} days left)",
+                loginToRate: "Login required to rate",
+                adminOverride: "Override Score",
+                delete: "Delete",
+                edit: "Edit",
+                diffBeginner: "Beginner",
+                diffIntermediate: "Intermediate",
+                diffAdvanced: "Advanced",
+                diffMaster: "Master"
+            },
+            zh: {
+                searchPlaceholder: "搜索招式名称...",
+                totalTricks: "共 {count} 个招式",
+                addTrick: "添加招式",
+                login: "登录",
+                logout: "退出",
+                rateBtn: "提交评分",
+                ratedMsg: "已评分 (还剩 {days} 天)",
+                loginToRate: "需要登录才能评分",
+                adminOverride: "修改分数",
+                delete: "删除",
+                edit: "编辑",
+                diffBeginner: "初级",
+                diffIntermediate: "中级",
+                diffAdvanced: "高级",
+                diffMaster: "大师"
+            },
+            ja: {
+                searchPlaceholder: "トリック名を検索...",
+                totalTricks: "全 {count} 件のトリック",
+                addTrick: "トリック追加",
+                login: "ログイン",
+                logout: "ログアウト",
+                rateBtn: "評価を送信",
+                ratedMsg: "評価済み (残り {days} 日)",
+                loginToRate: "評価にはログインが必要です",
+                adminOverride: "スコア変更",
+                delete: "削除",
+                edit: "編集",
+                diffBeginner: "初級",
+                diffIntermediate: "中級",
+                diffAdvanced: "上級",
+                diffMaster: "マスター"
+            }
+        };
+
+        let currentLang = 'ko';
+
+        // --- Initial Mock Data ---
+        const initialTricks = [
+            {
+                id: "1",
+                name: "Trapeze",
+                difficulty: "초급",
+                score: 1.5,
+                ratings: [1, 2, 1.5, 1.5],
+                videoId: "8l4N2_WfFAU",
+                desc: "1A의 가장 기본이 되는 스트링 트릭입니다."
+            },
+            {
+                id: "2",
+                name: "Double or Nothing",
+                difficulty: "중급",
+                score: 2.8,
+                ratings: [2.5, 3, 3, 2.7],
+                videoId: "94B8n0kZpC4",
+                desc: "손가락에 줄을 두 번 감아 올리는 기초 종합 트릭입니다."
+            },
+            {
+                id: "3",
+                name: "Kwijibo",
+                difficulty: "고급",
+                score: 4.2,
+                ratings: [4, 4.5, 4, 4.3],
+                videoId: "s6M58fP_Pno",
+                desc: "손을 교차하며 화려하게 위치를 바꾸는 고난도 콤보 트릭."
+            }
+        ];
+
+        // App State
+        let tricks = JSON.parse(localStorage.getItem('yo1a_tricks')) || initialTricks;
+        let currentUser = JSON.parse(localStorage.getItem('yo1a_user')) || null; // { username, isAdmin }
+        let currentAuthTab = 'user';
+
+        // --- App Initialization ---
+        document.addEventListener("DOMContentLoaded", () => {
+            renderAuthContainer();
+            renderTricks(tricks);
+            applyLanguage();
+        });
+
+        // --- Multi-language Handler ---
+        function changeLanguage(lang) {
+            currentLang = lang;
+            applyLanguage();
+            renderTricks(getFilteredTricks());
+        }
+
+        function applyLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            const addBtn = document.getElementById('addTrickBtn');
+            if (addBtn) addBtn.querySelector('span').innerText = t.addTrick;
+        }
+
+        function t(key, params = {}) {
+            let str = translations[currentLang][key] || key;
+            for (const [pKey, pVal] of Object.entries(params)) {
+                str = str.replace(`{${pKey}}`, pVal);
+            }
+            return str;
+        }
+
+        // --- YouTube URL Helper ---
+        function extractYouTubeId(url) {
+            if (!url) return "8l4N2_WfFAU";
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : url;
+        }
+
+        // --- Render Functions ---
+        function renderAuthContainer() {
+            const container = document.getElementById('authContainer');
+            const addBtn = document.getElementById('addTrickBtn');
+
+            if (currentUser) {
+                const badge = currentUser.isAdmin ? `<span class="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded border border-red-500/30 font-bold">Admin</span>` : '';
+                container.innerHTML = `
+                    <div class="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700 text-xs">
+                        <i class="fa-solid fa-user text-cyan-400"></i>
+                        <span class="font-medium text-slate-200">${currentUser.username}</span>
+                        ${badge}
+                    </div>
+                    <button onclick="handleLogout()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold px-3 py-1.5 rounded-xl transition">
+                        ${t('logout')}
+                    </button>
+                `;
+                if (currentUser.isAdmin) {
+                    addBtn.classList.remove('hidden');
+                } else {
+                    addBtn.classList.add('hidden');
+                }
+            } else {
+                container.innerHTML = `
+                    <button onclick="openAuthModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow-lg shadow-cyan-900/30 flex items-center gap-1.5">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        ${t('login')}
+                    </button>
+                `;
+                addBtn.classList.add('hidden');
+            }
+        }
+
+        function getFilteredTricks() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            let filtered = tricks.filter(item => item.name.toLowerCase().includes(query));
+
+            // Sort: length match closest to search query length first
+            if (query) {
+                filtered.sort((a, b) => {
+                    const diffA = Math.abs(a.name.length - query.length);
+                    const diffB = Math.abs(b.name.length - query.length);
+                    return diffA - diffB;
+                });
+            }
+            return filtered;
+        }
+
+        function handleSearch() {
+            renderTricks(getFilteredTricks());
+        }
+
+        function renderTricks(list) {
+            const grid = document.getElementById('trickGrid');
+            const countElem = document.getElementById('resultCount');
+            countElem.innerText = t('totalTricks', { count: list.length });
+
+            if (list.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-500">
+                        <i class="fa-solid fa-ghost text-4xl mb-3 block"></i>
+                        검색 결과가 없습니다.
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = list.map(trick => {
+                const ytId = extractYouTubeId(trick.videoId);
+                const hasRated = checkUserRated(trick.id);
+                const avgScore = Number(trick.score).toFixed(1);
+
+                return `
+                    <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-lg hover:border-slate-600 transition flex flex-col">
+                        <!-- YouTube Frame -->
+                        <div class="aspect-video w-full bg-black relative">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/${ytId}" title="${trick.name}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-5 flex-grow flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-lg font-bold text-slate-100 tracking-wide">${trick.name}</h3>
+                                    <span class="text-xs px-2.5 py-1 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800 font-semibold">
+                                        ${trick.difficulty}
+                                    </span>
+                                </div>
+                                <p class="text-xs text-slate-400 line-clamp-2 mb-4">${trick.desc || ''}</p>
+                            </div>
+
+                            <div>
+                                <!-- Score Badge -->
+                                <div class="flex justify-between items-end bg-slate-900/80 p-3 rounded-xl border border-slate-700/60 mb-4">
+                                    <div>
+                                        <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">평균 난이도 점수</span>
+                                        <div class="flex items-center space-x-1.5 mt-0.5">
+                                            <i class="fa-solid fa-star text-amber-400 text-sm"></i>
+                                            <span class="text-xl font-black text-slate-100">${avgScore}</span>
+                                            <span class="text-xs text-slate-500">/ 5.0</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-slate-500">(${trick.ratings ? trick.ratings.length : 0}명 참여)</span>
+                                </div>
+
+                                <!-- Rating / Controls Section -->
+                                ${renderRatingControls(trick, hasRated)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRatingControls(trick, hasRated) {
+            if (currentUser && currentUser.isAdmin) {
+                return `
+                    <div class="space-y-2 pt-2 border-t border-slate-700/50">
+                        <div class="flex gap-2">
+                            <input type="number" id="override-${trick.id}" step="0.1" min="0" max="5" value="${trick.score}" class="w-24 bg-slate-900 border border-slate-600 rounded-lg text-xs px-2 text-slate-100">
+                            <button onclick="adminOverrideScore('${trick.id}')" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-1.5 rounded-lg transition">
+                                ${t('adminOverride')}
+                            </button>
+                        </div>
+                        <div class="flex justify-end space-x-3 text-xs pt-1">
+                            <button onclick="deleteTrick('${trick.id}')" class="text-red-400 hover:underline"><i class="fa-solid fa-trash"></i> ${t('delete')}</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (!currentUser) {
+                return `
+                    <button onclick="openAuthModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs py-2 rounded-xl transition font-medium">
+                        ${t('loginToRate')}
+                    </button>
+                `;
+            }
+
+            if (hasRated.rated) {
+                return `
+                    <div class="text-center bg-slate-900/50 py-2 rounded-xl border border-slate-700/50 text-xs text-slate-400">
+                        <i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i>
+                        ${t('ratedMsg', { days: hasRated.daysLeft })}
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="flex items-center space-x-2">
+                    <select id="rateSelect-${trick.id}" class="bg-slate-900 border border-slate-600 rounded-lg text-xs px-2 py-2 text-slate-100 outline-none focus:ring-1 focus:ring-cyan-500">
+                        <option value="0">0점 (매우 쉬움)</option>
+                        <option value="1">1점</option>
+                        <option value="2">2점</option>
+                        <option value="3" selected>3점</option>
+                        <option value="4">4점</option>
+                        <option value="5">5점 (극상 난이도)</option>
+                    </select>
+                    <button onclick="submitRating('${trick.id}')" class="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs py-2 rounded-lg transition">
+                        ${t('rateBtn')}
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- Monthly Voting Logic ---
+        function checkUserRated(trickId) {
+            if (!currentUser) return { rated: false };
+            const records = JSON.parse(localStorage.getItem(`yo1a_rates_${currentUser.username}`)) || {};
+            const lastRatedTime = records[trickId];
+
+            if (!lastRatedTime) return { rated: false };
+
+            const now = Date.now();
+            const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+            const diff = now - lastRatedTime;
+
+            if (diff < thirtyDaysMs) {
+                const daysLeft = Math.ceil((thirtyDaysMs - diff) / (1000 * 60 * 60 * 24));
+                return { rated: true, daysLeft };
+            }
+            return { rated: false };
+        }
+
+        function submitRating(trickId) {
+            if (!currentUser) return openAuthModal();
+
+            const select = document.getElementById(`rateSelect-${trickId}`);
+            const scoreVal = parseFloat(select.value);
+
+            const trick = tricks.find(t => t.id === trickId);
+            if (!trick) return;
+
+            if (!trick.ratings) trick.ratings = [];
+            trick.ratings.push(scoreVal);
+
+            // Recalculate Average
+            const sum = trick.ratings.reduce((a, b) => a + b, 0);
+            trick.score = (sum / trick.ratings.length).toFixed(1);
+
+            // Record Rate Time
+            const records = JSON.parse(localStorage.getItem(`yo1a_rates_${currentUser.username}`)) || {};
+            records[trickId] = Date.now();
+            localStorage.setItem(`yo1a_rates_${currentUser.username}`, JSON.stringify(records));
+
+            saveTricks();
+            renderTricks(getFilteredTricks());
+        }
+
+        // --- Admin Actions ---
+        function adminOverrideScore(trickId) {
+            const input = document.getElementById(`override-${trickId}`);
+            const newScore = parseFloat(input.value);
+            if (isNaN(newScore) || newScore < 0 || newScore > 5) {
+                alert("0점에서 5점 사이의 숫자를 입력하세요.");
+                return;
+            }
+
+            const trick = tricks.find(t => t.id === trickId);
+            if (trick) {
+                trick.score = newScore.toFixed(1);
+                saveTricks();
+                renderTricks(getFilteredTricks());
+            }
+        }
+
+        function deleteTrick(trickId) {
+            if (confirm("이 기술을 삭제하시겠습니까?")) {
+                tricks = tricks.filter(t => t.id !== trickId);
+                saveTricks();
+                renderTricks(getFilteredTricks());
+            }
+        }
+
+        function saveTricks() {
+            localStorage.setItem('yo1a_tricks', JSON.stringify(tricks));
+        }
+
+        // --- Modals & Auth Handler ---
+        function openAuthModal() {
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function switchAuthTab(tab) {
+            currentAuthTab = tab;
+            const tabUser = document.getElementById('tabUser');
+            const tabAdmin = document.getElementById('tabAdmin');
+            const userFields = document.getElementById('userFields');
+
+            if (tab === 'admin') {
+                tabAdmin.className = "flex-1 py-2 font-semibold text-cyan-400 border-b-2 border-cyan-400";
+                tabUser.className = "flex-1 py-2 font-semibold text-slate-400 border-b-2 border-transparent";
+                userFields.classList.add('hidden');
+            } else {
+                tabUser.className = "flex-1 py-2 font-semibold text-cyan-400 border-b-2 border-cyan-400";
+                tabAdmin.className = "flex-1 py-2 font-semibold text-slate-400 border-b-2 border-transparent";
+                userFields.classList.remove('hidden');
+            }
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const pass = document.getElementById('authPassword').value;
+
+            if (currentAuthTab === 'admin') {
+                if (pass === 'leowner') {
+                    currentUser = { username: "Admin", isAdmin: true };
+                    localStorage.setItem('yo1a_user', JSON.stringify(currentUser));
+                    closeModal('authModal');
+                    renderAuthContainer();
+                    renderTricks(getFilteredTricks());
+                } else {
+                    alert("관리자 비밀번호가 일치하지 않습니다.");
+                }
+            } else {
+                const username = document.getElementById('authUsername').value.trim();
+                if (!username) {
+                    alert("아이디를 입력하세요.");
+                    return;
+                }
+                currentUser = { username: username, isAdmin: false };
+                localStorage.setItem('yo1a_user', JSON.stringify(currentUser));
+                closeModal('authModal');
+                renderAuthContainer();
+                renderTricks(getFilteredTricks());
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('yo1a_user');
+            renderAuthContainer();
+            renderTricks(getFilteredTricks());
+        }
+
+        function openAddModal() {
+            document.getElementById('trickModal').classList.remove('hidden');
+        }
+
+        function handleTrickSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('trickName').value.trim();
+            const difficulty = document.getElementById('trickDifficulty').value;
+            const initialScore = parseFloat(document.getElementById('trickInitialScore').value) || 3.0;
+            const videoUrl = document.getElementById('trickVideoUrl').value.trim();
+            const desc = document.getElementById('trickDesc').value.trim();
+
+            const newTrick = {
+                id: Date.now().toString(),
+                name,
+                difficulty,
+                score: initialScore.toFixed(1),
+                ratings: [initialScore],
+                videoId: videoUrl,
+                desc
+            };
+
+            tricks.unshift(newTrick);
+            saveTricks();
+            closeModal('trickModal');
+            renderTricks(getFilteredTricks());
+
+            // Reset form
+            e.target.reset();
+        }
+    </script>
 </body>
 </html>
