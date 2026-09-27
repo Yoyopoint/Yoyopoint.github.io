@@ -21,7 +21,7 @@
     <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-[#00E5FF] fa-compact-disc text-2xl text-cyan-400 animate-spin-slow"></i>
+                <i class="fa-solid fa-compact-disc text-2xl text-cyan-400"></i>
                 <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
                     Yo-Yo 1A Score Standards
                 </h1>
@@ -124,7 +124,7 @@
             <button onclick="closeModal('trickModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            <h2 id="trickModalTitle" class="text-xl font-bold mb-4 text-cyan-400">새 기술 추가</h2>
+            <h2 id="trickModalTitle" class="text-xl font-bold mb-4 text-cyan-400">기술 정보 설정</h2>
 
             <form onsubmit="handleTrickSubmit(event)" class="space-y-3">
                 <input type="hidden" id="editTrickId">
@@ -133,16 +133,18 @@
                     <input type="text" id="trickName" required class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">난이도</label>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">난이도 (1 ~ 5+)</label>
                     <select id="trickDifficulty" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100">
-                        <option value="초급">초급 (Beginner)</option>
-                        <option value="중급">중급 (Intermediate)</option>
-                        <option value="고급">고급 (Advanced)</option>
-                        <option value="마스터">마스터 (Master)</option>
+                        <option value="1">난이도 1</option>
+                        <option value="2">난이도 2</option>
+                        <option value="3">난이도 3</option>
+                        <option value="4">난이도 4</option>
+                        <option value="5">난이도 5</option>
+                        <option value="5+">난이도 5+</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">초기 점수 (0~5)</label>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">점수 (0~5)</label>
                     <input type="number" id="trickInitialScore" min="0" max="5" step="0.1" value="3.0" required class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100">
                 </div>
                 <div>
@@ -151,7 +153,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-300 mb-1">설명</label>
-                    <textarea id="trickDesc" rows="2" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100"></textarea>
+                    <textarea id="trickDesc" rows="3" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-100"></textarea>
                 </div>
                 <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 rounded-lg transition text-sm mt-2">
                     저장하기
@@ -173,13 +175,9 @@
                 rateBtn: "점수 평가",
                 ratedMsg: "평가완료 (다음 평가까지 {days}일)",
                 loginToRate: "로그인 후 평가 가능",
-                adminOverride: "점수 강제 변경",
                 delete: "삭제",
-                edit: "수정",
-                diffBeginner: "초급",
-                diffIntermediate: "중급",
-                diffAdvanced: "고급",
-                diffMaster: "마스터"
+                edit: "전체 정보 수정",
+                diffPrefix: "난이도 "
             },
             en: {
                 searchPlaceholder: "Search trick name...",
@@ -190,13 +188,9 @@
                 rateBtn: "Submit Rate",
                 ratedMsg: "Rated ({days} days left)",
                 loginToRate: "Login required to rate",
-                adminOverride: "Override Score",
                 delete: "Delete",
-                edit: "Edit",
-                diffBeginner: "Beginner",
-                diffIntermediate: "Intermediate",
-                diffAdvanced: "Advanced",
-                diffMaster: "Master"
+                edit: "Edit All Info",
+                diffPrefix: "Diff "
             },
             zh: {
                 searchPlaceholder: "搜索招式名称...",
@@ -207,13 +201,9 @@
                 rateBtn: "提交评分",
                 ratedMsg: "已评分 (还剩 {days} 天)",
                 loginToRate: "需要登录才能评分",
-                adminOverride: "修改分数",
                 delete: "删除",
-                edit: "编辑",
-                diffBeginner: "初级",
-                diffIntermediate: "中级",
-                diffAdvanced: "高级",
-                diffMaster: "大师"
+                edit: "编辑全部信息",
+                diffPrefix: "难度 "
             },
             ja: {
                 searchPlaceholder: "トリック名を検索...",
@@ -224,13 +214,9 @@
                 rateBtn: "評価を送信",
                 ratedMsg: "評価済み (残り {days} 日)",
                 loginToRate: "評価にはログインが必要です",
-                adminOverride: "スコア変更",
                 delete: "削除",
-                edit: "編集",
-                diffBeginner: "初級",
-                diffIntermediate: "中級",
-                diffAdvanced: "上級",
-                diffMaster: "マスター"
+                edit: "全情報を編集",
+                diffPrefix: "難易度 "
             }
         };
 
@@ -241,27 +227,27 @@
             {
                 id: "1",
                 name: "Trapeze",
-                difficulty: "초급",
+                difficulty: "1",
                 score: 1.5,
-                ratings: [1, 2, 1.5, 1.5],
+                ratings: [1.5],
                 videoId: "8l4N2_WfFAU",
                 desc: "1A의 가장 기본이 되는 스트링 트릭입니다."
             },
             {
                 id: "2",
                 name: "Double or Nothing",
-                difficulty: "중급",
+                difficulty: "2",
                 score: 2.8,
-                ratings: [2.5, 3, 3, 2.7],
+                ratings: [2.8],
                 videoId: "94B8n0kZpC4",
                 desc: "손가락에 줄을 두 번 감아 올리는 기초 종합 트릭입니다."
             },
             {
                 id: "3",
                 name: "Kwijibo",
-                difficulty: "고급",
+                difficulty: "4",
                 score: 4.2,
-                ratings: [4, 4.5, 4, 4.3],
+                ratings: [4.2],
                 videoId: "s6M58fP_Pno",
                 desc: "손을 교차하며 화려하게 위치를 바꾸는 고난도 콤보 트릭."
             }
@@ -269,7 +255,7 @@
 
         // App State
         let tricks = JSON.parse(localStorage.getItem('yo1a_tricks')) || initialTricks;
-        let currentUser = JSON.parse(localStorage.getItem('yo1a_user')) || null; // { username, isAdmin }
+        let currentUser = JSON.parse(localStorage.getItem('yo1a_user')) || null;
         let currentAuthTab = 'user';
 
         // --- App Initialization ---
@@ -346,7 +332,6 @@
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             let filtered = tricks.filter(item => item.name.toLowerCase().includes(query));
 
-            // Sort: length match closest to search query length first
             if (query) {
                 filtered.sort((a, b) => {
                     const diffA = Math.abs(a.name.length - query.length);
@@ -393,8 +378,8 @@
                             <div>
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="text-lg font-bold text-slate-100 tracking-wide">${trick.name}</h3>
-                                    <span class="text-xs px-2.5 py-1 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800 font-semibold">
-                                        ${trick.difficulty}
+                                    <span class="text-xs px-2.5 py-1 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold">
+                                        ${t('diffPrefix')}${trick.difficulty}
                                     </span>
                                 </div>
                                 <p class="text-xs text-slate-400 line-clamp-2 mb-4">${trick.desc || ''}</p>
@@ -404,7 +389,7 @@
                                 <!-- Score Badge -->
                                 <div class="flex justify-between items-end bg-slate-900/80 p-3 rounded-xl border border-slate-700/60 mb-4">
                                     <div>
-                                        <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">평균 난이도 점수</span>
+                                        <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">평균 점수</span>
                                         <div class="flex items-center space-x-1.5 mt-0.5">
                                             <i class="fa-solid fa-star text-amber-400 text-sm"></i>
                                             <span class="text-xl font-black text-slate-100">${avgScore}</span>
@@ -426,16 +411,13 @@
         function renderRatingControls(trick, hasRated) {
             if (currentUser && currentUser.isAdmin) {
                 return `
-                    <div class="space-y-2 pt-2 border-t border-slate-700/50">
-                        <div class="flex gap-2">
-                            <input type="number" id="override-${trick.id}" step="0.1" min="0" max="5" value="${trick.score}" class="w-24 bg-slate-900 border border-slate-600 rounded-lg text-xs px-2 text-slate-100">
-                            <button onclick="adminOverrideScore('${trick.id}')" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-1.5 rounded-lg transition">
-                                ${t('adminOverride')}
-                            </button>
-                        </div>
-                        <div class="flex justify-end space-x-3 text-xs pt-1">
-                            <button onclick="deleteTrick('${trick.id}')" class="text-red-400 hover:underline"><i class="fa-solid fa-trash"></i> ${t('delete')}</button>
-                        </div>
+                    <div class="pt-2 border-t border-slate-700/50 flex justify-between items-center text-xs">
+                        <button onclick="openEditModal('${trick.id}')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                            <i class="fa-solid fa-pen-to-square"></i> ${t('edit')}
+                        </button>
+                        <button onclick="deleteTrick('${trick.id}')" class="text-red-400 hover:text-red-300 font-semibold px-2 py-1.5">
+                            <i class="fa-solid fa-trash"></i> ${t('delete')}
+                        </button>
                     </div>
                 `;
             }
@@ -460,12 +442,12 @@
             return `
                 <div class="flex items-center space-x-2">
                     <select id="rateSelect-${trick.id}" class="bg-slate-900 border border-slate-600 rounded-lg text-xs px-2 py-2 text-slate-100 outline-none focus:ring-1 focus:ring-cyan-500">
-                        <option value="0">0점 (매우 쉬움)</option>
+                        <option value="0">0점</option>
                         <option value="1">1점</option>
                         <option value="2">2점</option>
                         <option value="3" selected>3점</option>
                         <option value="4">4점</option>
-                        <option value="5">5점 (극상 난이도)</option>
+                        <option value="5">5점</option>
                     </select>
                     <button onclick="submitRating('${trick.id}')" class="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs py-2 rounded-lg transition">
                         ${t('rateBtn')}
@@ -505,11 +487,9 @@
             if (!trick.ratings) trick.ratings = [];
             trick.ratings.push(scoreVal);
 
-            // Recalculate Average
             const sum = trick.ratings.reduce((a, b) => a + b, 0);
             trick.score = (sum / trick.ratings.length).toFixed(1);
 
-            // Record Rate Time
             const records = JSON.parse(localStorage.getItem(`yo1a_rates_${currentUser.username}`)) || {};
             records[trickId] = Date.now();
             localStorage.setItem(`yo1a_rates_${currentUser.username}`, JSON.stringify(records));
@@ -519,20 +499,19 @@
         }
 
         // --- Admin Actions ---
-        function adminOverrideScore(trickId) {
-            const input = document.getElementById(`override-${trickId}`);
-            const newScore = parseFloat(input.value);
-            if (isNaN(newScore) || newScore < 0 || newScore > 5) {
-                alert("0점에서 5점 사이의 숫자를 입력하세요.");
-                return;
-            }
-
+        function openEditModal(trickId) {
             const trick = tricks.find(t => t.id === trickId);
-            if (trick) {
-                trick.score = newScore.toFixed(1);
-                saveTricks();
-                renderTricks(getFilteredTricks());
-            }
+            if (!trick) return;
+
+            document.getElementById('editTrickId').value = trick.id;
+            document.getElementById('trickName').value = trick.name;
+            document.getElementById('trickDifficulty').value = trick.difficulty;
+            document.getElementById('trickInitialScore').value = trick.score;
+            document.getElementById('trickVideoUrl').value = trick.videoId;
+            document.getElementById('trickDesc').value = trick.desc || '';
+            document.getElementById('trickModalTitle').innerText = "기술 정보 수정 (관리자)";
+
+            document.getElementById('trickModal').classList.remove('hidden');
         }
 
         function deleteTrick(trickId) {
@@ -609,34 +588,53 @@
         }
 
         function openAddModal() {
+            document.getElementById('editTrickId').value = "";
+            document.getElementById('trickName').value = "";
+            document.getElementById('trickDifficulty').value = "1";
+            document.getElementById('trickInitialScore').value = "3.0";
+            document.getElementById('trickVideoUrl').value = "";
+            document.getElementById('trickDesc').value = "";
+            document.getElementById('trickModalTitle').innerText = "새 기술 추가";
+
             document.getElementById('trickModal').classList.remove('hidden');
         }
 
         function handleTrickSubmit(e) {
             e.preventDefault();
+            const editId = document.getElementById('editTrickId').value;
             const name = document.getElementById('trickName').value.trim();
             const difficulty = document.getElementById('trickDifficulty').value;
-            const initialScore = parseFloat(document.getElementById('trickInitialScore').value) || 3.0;
+            const scoreVal = parseFloat(document.getElementById('trickInitialScore').value) || 3.0;
             const videoUrl = document.getElementById('trickVideoUrl').value.trim();
             const desc = document.getElementById('trickDesc').value.trim();
 
-            const newTrick = {
-                id: Date.now().toString(),
-                name,
-                difficulty,
-                score: initialScore.toFixed(1),
-                ratings: [initialScore],
-                videoId: videoUrl,
-                desc
-            };
+            if (editId) {
+                // Edit existing
+                const trick = tricks.find(t => t.id === editId);
+                if (trick) {
+                    trick.name = name;
+                    trick.difficulty = difficulty;
+                    trick.score = scoreVal.toFixed(1);
+                    trick.videoId = videoUrl;
+                    trick.desc = desc;
+                }
+            } else {
+                // Create new
+                const newTrick = {
+                    id: Date.now().toString(),
+                    name,
+                    difficulty,
+                    score: scoreVal.toFixed(1),
+                    ratings: [scoreVal],
+                    videoId: videoUrl,
+                    desc
+                };
+                tricks.unshift(newTrick);
+            }
 
-            tricks.unshift(newTrick);
             saveTricks();
             closeModal('trickModal');
             renderTricks(getFilteredTricks());
-
-            // Reset form
-            e.target.reset();
         }
     </script>
 </body>
