@@ -62,7 +62,7 @@
             <!-- Right Controls: Theme, Language, Auth -->
             <div class="flex items-center space-x-3">
                 <!-- Theme Switcher -->
-                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:opacity-80 transition" title="Toggle Light/Dark Theme">
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:opacity-80 transition" title="Toggle Theme">
                     <i id="themeIcon" class="fa-solid fa-moon"></i>
                 </button>
 
@@ -83,9 +83,8 @@
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
 
-        <!-- ================= PAGE 1: OFFICIAL TRICKS ================= -->
+        <!-- PAGE 1: OFFICIAL TRICKS -->
         <section id="pageOfficial" class="space-y-6">
-            <!-- Search & Control Bar -->
             <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="relative w-full md:w-1/2">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
@@ -99,31 +98,28 @@
                     </span>
                     <button id="addTrickBtn" onclick="openAddModal()" class="hidden bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-black font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition">
                         <i class="fa-solid fa-plus"></i>
-                        <span>기술 직저 추가 (관리자)</span>
+                        <span>기술 직접 추가 (관리자)</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Official Trick Cards Grid -->
             <div id="trickGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- ================= PAGE 2: USER PROPOSALS ================= -->
+        <!-- PAGE 2: USER PROPOSALS -->
         <section id="pageProposals" class="space-y-6 hidden">
-            <!-- Proposal Header Bar -->
             <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <i class="fa-solid fa-lightbulb text-amber-500"></i> 유저 기술 후보 제안
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                        일반 유저는 기술 이름과 유튜브 URL만 등록할 수 있습니다. <br>
-                        <strong>추천 10명 이상</strong>이 달성되면 관리자가 일괄 승인하여 공식 평가 페이지로 이동합니다.
+                        로그인한 유저는 기술 이름과 유튜브 URL만 등록할 수 있습니다. <br>
+                        <strong>추천 10명 이상</strong> 달성 시 관리자가 일괄 승인하여 공식 평가 페이지로 이동합니다.
                     </p>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <!-- Admin Batch Approve Button -->
                     <button id="adminBatchApproveBtn" onclick="batchApproveProposals()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition items-center gap-1.5">
                         <i class="fa-solid fa-circle-check"></i>
                         <span>10명 이상 항목 전체 승인</span>
@@ -135,32 +131,29 @@
                 </div>
             </div>
 
-            <!-- Proposals Grid -->
             <div id="proposalGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- ================= PAGE 3: FEEDBACK & REQUESTS ================= -->
+        <!-- PAGE 3: FEEDBACK & REQUESTS -->
         <section id="pageFeedback" class="space-y-6 hidden">
             <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
                     <i class="fa-solid fa-comment-dots text-blue-500"></i> 피드백 및 관리자 요청
                 </h2>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                    사이트 기능 개선 요청, 수정 제안, 문의사항을 편하게 작성해 주세요.
+                    사이트 기능 개선 요청, 수정 제안, 문의사항을 편하게 작성해 주세요. (로그인 필요)
                 </p>
 
-                <!-- Feedback Form -->
                 <form onsubmit="handleFeedbackSubmit(event)" class="space-y-3 max-w-2xl mb-8">
                     <div>
                         <textarea id="feedbackText" required rows="3" placeholder="관리자에게 전달할 요청사항이나 피드백을 적어주세요..." 
                             class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-xs text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-slate-400"></textarea>
                     </div>
-                    <button type="submit" class="bg-slate-900 dark:bg-slate-100 text-white dark:text-black font-bold text-xs px-5 py-2.5 rounded-xl transition">
-                        피드백 보낼 수 없음 (로그인 필요)
+                    <button id="feedbackSubmitBtn" type="submit" class="bg-slate-900 dark:bg-slate-100 text-white dark:text-black font-bold text-xs px-5 py-2.5 rounded-xl transition">
+                        피드백 보내기
                     </button>
                 </form>
 
-                <!-- Feedback List -->
                 <div class="border-t border-slate-200 dark:border-slate-800 pt-6">
                     <h3 class="text-sm font-bold mb-4 text-slate-800 dark:text-slate-200">등록된 피드백 목록</h3>
                     <div id="feedbackList" class="space-y-3"></div>
@@ -172,33 +165,50 @@
 
     <!-- Footer -->
     <footer class="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 mt-auto">
-        <p>© 2026 Yo-Yo 1A Standardization Project. Admin Passkey: <code class="text-slate-800 dark:text-slate-200 font-bold">leowner</code></p>
+        <p>© 2026 Yo-Yo 1A Standardization Project.</p>
     </footer>
 
-    <!-- Auth Modal -->
+    <!-- Auth Modal (Login & Signup) -->
     <div id="authModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 w-full max-w-md relative shadow-2xl">
             <button onclick="closeModal('authModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            <h2 class="text-xl font-bold mb-4 text-slate-900 dark:text-white">로그인</h2>
+            
+            <h2 id="authTitle" class="text-xl font-bold mb-4 text-slate-900 dark:text-white">로그인</h2>
 
+            <!-- Main Auth Mode Tabs -->
             <div class="flex border-b border-slate-200 dark:border-slate-800 mb-4 text-xs font-bold">
-                <button onclick="switchAuthTab('user')" id="tabUser" class="flex-1 py-2 text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white">일반 회원</button>
-                <button onclick="switchAuthTab('admin')" id="tabAdmin" class="flex-1 py-2 text-slate-400 border-b-2 border-transparent">관리자 (`leowner`)</button>
+                <button onclick="switchAuthMode('login')" id="tabModeLogin" class="flex-1 py-2 text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white">로그인</button>
+                <button onclick="switchAuthMode('signup')" id="tabModeSignup" class="flex-1 py-2 text-slate-400 border-b-2 border-transparent">회원가입</button>
             </div>
 
-            <form id="authForm" onsubmit="handleAuthSubmit(event)">
-                <div id="userFields">
+            <!-- User Sub-Type Selector (Only visible in Login) -->
+            <div id="adminTabContainer" class="flex gap-2 mb-4">
+                <button onclick="setAuthUserType('user')" id="btnUserTypeMember" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white">일반 회원</button>
+                <button onclick="setAuthUserType('admin')" id="btnUserTypeAdmin" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-100 dark:bg-slate-950 text-slate-400">관리자</button>
+            </div>
+
+            <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-3">
+                <div id="usernameField">
                     <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">아이디</label>
-                    <input type="text" id="authUsername" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs mb-3 text-slate-900 dark:text-slate-100 outline-none">
+                    <input type="text" id="authUsername" required class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
                 </div>
+
                 <div>
                     <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">비밀번호</label>
-                    <input type="password" id="authPassword" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs mb-4 text-slate-900 dark:text-slate-100 outline-none">
+                    <input type="password" id="authPassword" required class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
                 </div>
-                <button type="submit" class="w-full bg-slate-900 dark:bg-slate-100 text-white dark:text-black font-bold py-2.5 rounded-xl transition text-xs">
-                    확인
+
+                <div id="passwordConfirmField" class="hidden">
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">비밀번호 확인</label>
+                    <input type="password" id="authPasswordConfirm" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
+                </div>
+
+                <div id="authStatusMsg" class="text-xs font-semibold text-red-500 hidden py-1"></div>
+
+                <button type="submit" id="authSubmitBtn" class="w-full bg-slate-900 dark:bg-slate-100 text-white dark:text-black font-bold py-2.5 rounded-xl transition text-xs mt-2">
+                    로그인
                 </button>
             </form>
         </div>
@@ -304,10 +314,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
         import { 
-            getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, getDocs 
+            getFirestore, collection, onSnapshot, doc, setDoc, getDoc, updateDoc, deleteDoc 
         } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
-        // Firebase Configuration (Provided by User)
         const firebaseConfig = {
             apiKey: "AIzaSyDaWdDcxs2zZtuL7IDS-TxVTf8z7_uee0Y",
             authDomain: "yoyopoint-f28c4.firebaseapp.com",
@@ -321,8 +330,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Global Application State
         window.db = db;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
+        window.updateDoc = updateDoc;
+        window.deleteDoc = deleteDoc;
         window.tricks = [];
         window.proposals = [];
         window.feedbacks = [];
@@ -330,7 +343,6 @@
         window.currentLang = 'ko';
         window.currentUser = JSON.parse(localStorage.getItem('yo1a_user')) || null;
 
-        // Default Initial Data (Seed data ONLY if Firestore is completely empty)
         const seedTricks = [
             {
                 id: "1",
@@ -361,12 +373,9 @@
             }
         ];
 
-        // --- Real-time Listeners for Firestore ---
         function initFirestoreListeners() {
-            // 1. Listen to Official Tricks
             onSnapshot(collection(db, "tricks"), async (snapshot) => {
                 if (snapshot.empty) {
-                    // Seed initial data ONLY if DB is totally clean & empty
                     for (const item of seedTricks) {
                         await setDoc(doc(db, "tricks", item.id), item);
                     }
@@ -376,28 +385,24 @@
                 }
             });
 
-            // 2. Listen to Proposals
             onSnapshot(collection(db, "proposals"), (snapshot) => {
                 window.proposals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderProposals();
                 updateProposalBadge();
             });
 
-            // 3. Listen to Feedbacks
             onSnapshot(collection(db, "feedbacks"), (snapshot) => {
                 window.feedbacks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderFeedbacks();
             });
         }
 
-        // Initialize App
         document.addEventListener("DOMContentLoaded", () => {
             initTheme();
             renderAuthContainer();
             initFirestoreListeners();
         });
 
-        // Theme Initialization
         function initTheme() {
             const savedTheme = localStorage.getItem('yo1a_theme') || 'dark';
             if (savedTheme === 'dark') {
@@ -412,41 +417,28 @@
 
     <!-- Global Application Logic Script -->
     <script>
-        // Translations
         const translations = {
             ko: {
                 navOfficial: "공식 기술",
                 navProposals: "기술 제안 / 후보",
                 navFeedback: "피드백 / 요청",
-                searchPlaceholder: "기술 이름을 검색하세요...",
                 totalTricks: "총 {count}개의 기술",
-                login: "로그인",
+                login: "로그인 / 회원가입",
                 logout: "로그아웃",
                 rateBtn: "점수 평가",
                 ratedMsg: "평가완료 ({days}일 남음)",
-                loginToRate: "로그인 후 평가 가능",
-                delete: "삭제",
-                edit: "전체 정보 수정",
-                upvote: "추천",
-                upvoted: "추천완료",
-                approveBtn: "공식 기술 승인"
+                loginToRate: "로그인 후 평가 가능"
             },
             en: {
                 navOfficial: "Official Tricks",
                 navProposals: "Trick Proposals",
                 navFeedback: "Feedback",
-                searchPlaceholder: "Search trick name...",
                 totalTricks: "Total {count} tricks",
-                login: "Login",
+                login: "Login / Sign Up",
                 logout: "Logout",
                 rateBtn: "Submit Rate",
                 ratedMsg: "Rated ({days} days left)",
-                loginToRate: "Login required to rate",
-                delete: "Delete",
-                edit: "Edit Info",
-                upvote: "Upvote",
-                upvoted: "Upvoted",
-                approveBtn: "Approve to Official"
+                loginToRate: "Login required to rate"
             }
         };
 
@@ -465,14 +457,12 @@
             return str;
         }
 
-        // Theme Toggle
         function toggleTheme() {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('yo1a_theme', isDark ? 'dark' : 'light');
             document.getElementById('themeIcon').className = isDark ? 'fa-solid fa-moon' : 'fa-solid fa-sun text-amber-500';
         }
 
-        // Navigation Tabs
         function switchMainTab(tab) {
             window.currentMainTab = tab;
             document.getElementById('pageOfficial').classList.toggle('hidden', tab !== 'official');
@@ -487,7 +477,6 @@
             document.getElementById('navFeedback').className = tab === 'feedback' ? activeClass : inactiveClass;
         }
 
-        // YouTube ID Extractor
         function extractYouTubeId(url) {
             if (!url) return "8l4N2_WfFAU";
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -495,7 +484,6 @@
             return (match && match[2].length === 11) ? match[2] : url;
         }
 
-        // Render Auth UI
         function renderAuthContainer() {
             const container = document.getElementById('authContainer');
             const addBtn = document.getElementById('addTrickBtn');
@@ -533,7 +521,6 @@
             }
         }
 
-        // --- Render Official Tricks ---
         function renderOfficialTricks() {
             const query = document.getElementById('searchInput')?.value.trim().toLowerCase() || '';
             let list = [...window.tricks];
@@ -610,7 +597,7 @@
 
             if (!currentUser) {
                 return `
-                    <button onclick="openAuthModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs py-2 rounded-xl font-medium">
+                    <button onclick="openAuthModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs py-2 rounded-xl font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition">
                         ${t('loginToRate')}
                     </button>
                 `;
@@ -632,7 +619,6 @@
             `;
         }
 
-        // --- Render User Proposals ---
         function renderProposals() {
             const grid = document.getElementById('proposalGrid');
             const list = [...window.proposals];
@@ -678,7 +664,7 @@
                                         삭제
                                     </button>
                                 ` : `
-                                    <button onclick="toggleUpvoteProposal('${prop.id}')" ${!currentUser ? 'disabled' : ''} class="${userHasUpvoted ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200'} font-bold text-xs px-3 py-1.5 rounded-lg transition">
+                                    <button onclick="toggleUpvoteProposal('${prop.id}')" class="${userHasUpvoted ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200'} font-bold text-xs px-3 py-1.5 rounded-lg transition">
                                         <i class="fa-solid fa-thumbs-up mr-1"></i> ${userHasUpvoted ? '추천완료' : '추천하기'}
                                     </button>
                                 `}
@@ -700,7 +686,6 @@
             }
         }
 
-        // --- Render Feedbacks ---
         function renderFeedbacks() {
             const listElem = document.getElementById('feedbackList');
             const list = [...window.feedbacks];
@@ -723,7 +708,6 @@
             `).join('');
         }
 
-        // --- Monthly Vote Check ---
         function checkUserRated(trickId) {
             if (!currentUser) return { rated: false };
             const records = JSON.parse(localStorage.getItem(`yo1a_rates_${currentUser.username}`)) || {};
@@ -739,6 +723,7 @@
         }
 
         function openVoteModal(id, name) {
+            if (!currentUser) return openAuthModal();
             document.getElementById('rateTargetId').value = id;
             document.getElementById('rateTargetName').innerText = `대상 기술: ${name}`;
             document.getElementById('rateModal').classList.remove('hidden');
@@ -755,13 +740,11 @@
             ratings.push(scoreVal);
             const newAvg = (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1);
 
-            // Update Firestore
             await window.updateDoc(window.doc(window.db, "tricks", trickId), {
                 ratings: ratings,
                 score: parseFloat(newAvg)
             });
 
-            // Store Local Voting Lock
             const records = JSON.parse(localStorage.getItem(`yo1a_rates_${currentUser.username}`)) || {};
             records[trickId] = Date.now();
             localStorage.setItem(`yo1a_rates_${currentUser.username}`, JSON.stringify(records));
@@ -769,7 +752,6 @@
             closeModal('rateModal');
         }
 
-        // --- User Proposal Actions ---
         function openProposalModal() {
             if (!currentUser) return openAuthModal();
             document.getElementById('proposalModal').classList.remove('hidden');
@@ -777,6 +759,8 @@
 
         async function handleProposalSubmit(e) {
             e.preventDefault();
+            if (!currentUser) return openAuthModal();
+
             const name = document.getElementById('propName').value.trim();
             const videoUrl = document.getElementById('propUrl').value.trim();
 
@@ -809,12 +793,10 @@
             await window.updateDoc(window.doc(window.db, "proposals", propId), { upvotes });
         }
 
-        // --- Admin Approval Actions ---
         async function approveSingleProposal(propId) {
             const prop = window.proposals.find(p => p.id === propId);
             if (!prop) return;
 
-            // Move to Official Tricks
             const officialId = Date.now().toString();
             await window.setDoc(window.doc(window.db, "tricks", officialId), {
                 id: officialId,
@@ -826,7 +808,6 @@
                 desc: `유저 ${prop.author}님 제안 및 승인 기술`
             });
 
-            // Delete from proposals
             await window.deleteDoc(window.doc(window.db, "proposals", propId));
         }
 
@@ -850,7 +831,6 @@
             }
         }
 
-        // --- Feedback Actions ---
         async function handleFeedbackSubmit(e) {
             e.preventDefault();
             if (!currentUser) return openAuthModal();
@@ -873,7 +853,6 @@
             await window.deleteDoc(window.doc(window.db, "feedbacks", fId));
         }
 
-        // --- Admin Official Trick Management ---
         function openAddModal() {
             document.getElementById('editTrickId').value = "";
             document.getElementById('trickName').value = "";
@@ -926,21 +905,80 @@
             }
         }
 
-        // --- Auth Controls ---
-        let currentAuthTab = 'user';
-        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+        /* --- AUTHENTICATION & USER MANAGEMENT LOGIC --- */
+        let authMode = 'login'; // 'login' | 'signup'
+        let authUserType = 'user'; // 'user' | 'admin'
+
+        function openAuthModal() { 
+            hideAuthError();
+            document.getElementById('authModal').classList.remove('hidden'); 
+        }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        function switchAuthTab(tab) {
-            currentAuthTab = tab;
-            document.getElementById('userFields').classList.toggle('hidden', tab === 'admin');
+        function showAuthError(msg) {
+            const elem = document.getElementById('authStatusMsg');
+            elem.innerText = msg;
+            elem.classList.remove('hidden');
         }
 
-        function handleAuthSubmit(e) {
+        function hideAuthError() {
+            const elem = document.getElementById('authStatusMsg');
+            elem.classList.add('hidden');
+        }
+
+        function switchAuthMode(mode) {
+            authMode = mode;
+            hideAuthError();
+            
+            document.getElementById('authTitle').innerText = mode === 'login' ? '로그인' : '회원가입';
+            document.getElementById('authSubmitBtn').innerText = mode === 'login' ? '로그인' : '가입완료';
+
+            document.getElementById('tabModeLogin').className = mode === 'login' 
+                ? 'flex-1 py-2 text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white' 
+                : 'flex-1 py-2 text-slate-400 border-b-2 border-transparent';
+            
+            document.getElementById('tabModeSignup').className = mode === 'signup' 
+                ? 'flex-1 py-2 text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white' 
+                : 'flex-1 py-2 text-slate-400 border-b-2 border-transparent';
+
+            if (mode === 'signup') {
+                document.getElementById('adminTabContainer').classList.add('hidden');
+                document.getElementById('usernameField').classList.remove('hidden');
+                document.getElementById('passwordConfirmField').classList.remove('hidden');
+            } else {
+                document.getElementById('adminTabContainer').classList.remove('hidden');
+                document.getElementById('passwordConfirmField').classList.add('hidden');
+                setAuthUserType(authUserType);
+            }
+        }
+
+        function setAuthUserType(type) {
+            authUserType = type;
+            hideAuthError();
+
+            const btnUser = document.getElementById('btnUserTypeMember');
+            const btnAdmin = document.getElementById('btnUserTypeAdmin');
+
+            if (type === 'user') {
+                btnUser.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white';
+                btnAdmin.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-100 dark:bg-slate-950 text-slate-400';
+                document.getElementById('usernameField').classList.remove('hidden');
+            } else {
+                btnAdmin.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white';
+                btnUser.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-100 dark:bg-slate-950 text-slate-400';
+                document.getElementById('usernameField').classList.add('hidden');
+            }
+        }
+
+        async function handleAuthSubmit(e) {
             e.preventDefault();
+            hideAuthError();
+
+            const username = document.getElementById('authUsername').value.trim();
             const pass = document.getElementById('authPassword').value;
 
-            if (currentAuthTab === 'admin') {
+            // 1. Admin Login Mode
+            if (authMode === 'login' && authUserType === 'admin') {
                 if (pass === 'leowner') {
                     window.currentUser = { username: "Admin", isAdmin: true };
                     localStorage.setItem('yo1a_user', JSON.stringify(currentUser));
@@ -949,17 +987,78 @@
                     renderOfficialTricks();
                     renderProposals();
                 } else {
-                    alert("관리자 비밀번호가 일치하지 않습니다.");
+                    showAuthError("관리자 비밀번호가 올바르지 않습니다.");
                 }
-            } else {
-                const username = document.getElementById('authUsername').value.trim();
-                if (!username) return alert("아이디를 입력하세요.");
-                window.currentUser = { username, isAdmin: false };
-                localStorage.setItem('yo1a_user', JSON.stringify(currentUser));
-                closeModal('authModal');
-                renderAuthContainer();
-                renderOfficialTricks();
-                renderProposals();
+                return;
+            }
+
+            // 2. Member Signup Mode
+            if (authMode === 'signup') {
+                const passConfirm = document.getElementById('authPasswordConfirm').value;
+
+                if (!username) return showAuthError("아이디를 입력해주세요.");
+                if (username.length < 3) return showAuthError("아이디는 최소 3자 이상이어야 합니다.");
+                if (pass.length < 4) return showAuthError("비밀번호는 최소 4자 이상이어야 합니다.");
+                if (pass !== passConfirm) return showAuthError("비밀번호가 서로 일치하지 않습니다.");
+
+                try {
+                    // DB 중복검사
+                    const userRef = window.doc(window.db, "users", username.toLowerCase());
+                    const userSnap = await window.getDoc(userRef);
+
+                    if (userSnap.exists()) {
+                        return showAuthError("이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
+                    }
+
+                    // 회원 등록
+                    await window.setDoc(userRef, {
+                        username: username,
+                        password: pass,
+                        createdAt: Date.now()
+                    });
+
+                    // 자동 로그인 처리
+                    window.currentUser = { username, isAdmin: false };
+                    localStorage.setItem('yo1a_user', JSON.stringify(currentUser));
+
+                    alert("회원가입이 성공적으로 완료되었습니다!");
+                    closeModal('authModal');
+                    renderAuthContainer();
+                    renderOfficialTricks();
+                    renderProposals();
+                } catch (err) {
+                    showAuthError("회원가입 처리 중 오류가 발생했습니다.");
+                }
+                return;
+            }
+
+            // 3. Member Login Mode
+            if (authMode === 'login' && authUserType === 'user') {
+                if (!username) return showAuthError("아이디를 입력해주세요.");
+
+                try {
+                    const userRef = window.doc(window.db, "users", username.toLowerCase());
+                    const userSnap = await window.getDoc(userRef);
+
+                    if (!userSnap.exists()) {
+                        return showAuthError("존재하지 않는 아이디입니다. 회원가입을 먼저 진행해주세요.");
+                    }
+
+                    const userData = userSnap.data();
+                    if (userData.password !== pass) {
+                        return showAuthError("비밀번호가 일치하지 않습니다.");
+                    }
+
+                    window.currentUser = { username: userData.username, isAdmin: false };
+                    localStorage.setItem('yo1a_user', JSON.stringify(currentUser));
+
+                    closeModal('authModal');
+                    renderAuthContainer();
+                    renderOfficialTricks();
+                    renderProposals();
+                } catch (err) {
+                    showAuthError("로그인 처리 중 오류가 발생했습니다.");
+                }
             }
         }
 
