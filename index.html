@@ -192,7 +192,7 @@
             <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-3">
                 <div id="usernameField">
                     <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">아이디</label>
-                    <input type="text" id="authUsername" required class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
+                    <input type="text" id="authUsername" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
                 </div>
 
                 <div>
@@ -962,12 +962,11 @@
             if (type === 'user') {
                 btnUser.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white';
                 btnAdmin.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-100 dark:bg-slate-950 text-slate-400';
-                document.getElementById('usernameField').classList.remove('hidden');
             } else {
                 btnAdmin.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white';
                 btnUser.className = 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-100 dark:bg-slate-950 text-slate-400';
-                document.getElementById('usernameField').classList.add('hidden');
             }
+            document.getElementById('usernameField').classList.remove('hidden');
         }
 
         async function handleAuthSubmit(e) {
@@ -977,10 +976,10 @@
             const username = document.getElementById('authUsername').value.trim();
             const pass = document.getElementById('authPassword').value;
 
-            // 1. Admin Login Mode
+            // 1. Admin Login Mode (오직 비밀번호 leowner13 검증)
             if (authMode === 'login' && authUserType === 'admin') {
-                if (pass === 'leowner') {
-                    window.currentUser = { username: "Admin", isAdmin: true };
+                if (pass === 'leowner13') {
+                    window.currentUser = { username: username || "Admin", isAdmin: true };
                     localStorage.setItem('yo1a_user', JSON.stringify(currentUser));
                     closeModal('authModal');
                     renderAuthContainer();
@@ -992,7 +991,7 @@
                 return;
             }
 
-            // 2. Member Signup Mode
+            // 2. Member Signup Mode (중복 체크)
             if (authMode === 'signup') {
                 const passConfirm = document.getElementById('authPasswordConfirm').value;
 
@@ -1002,7 +1001,6 @@
                 if (pass !== passConfirm) return showAuthError("비밀번호가 서로 일치하지 않습니다.");
 
                 try {
-                    // DB 중복검사
                     const userRef = window.doc(window.db, "users", username.toLowerCase());
                     const userSnap = await window.getDoc(userRef);
 
@@ -1010,18 +1008,16 @@
                         return showAuthError("이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
                     }
 
-                    // 회원 등록
                     await window.setDoc(userRef, {
                         username: username,
                         password: pass,
                         createdAt: Date.now()
                     });
 
-                    // 자동 로그인 처리
                     window.currentUser = { username, isAdmin: false };
                     localStorage.setItem('yo1a_user', JSON.stringify(currentUser));
 
-                    alert("회원가입이 성공적으로 완료되었습니다!");
+                    alert("회원가입이 완료되었습니다!");
                     closeModal('authModal');
                     renderAuthContainer();
                     renderOfficialTricks();
