@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yo-Yo 1A Trick Score Standardization Platform</title>
+    <title>Yo-Yo 1A Trick Clicker Standardization Platform</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -39,9 +39,9 @@
             <!-- Logo & Navigation Links -->
             <div class="flex items-center space-x-6">
                 <div class="flex items-center space-x-2.5 cursor-pointer" onclick="switchMainTab('official')">
-                    <i class="fa-solid fa-compact-disc text-2xl text-slate-800 dark:text-slate-100"></i>
+                    <i class="fa-solid fa-[#000] fa-arrow-pointer text-2xl text-slate-800 dark:text-slate-100"></i>
                     <h1 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                        Yo-Yo 1A <span class="text-xs bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-700 dark:text-slate-300">STD</span>
+                        Yo-Yo 1A <span class="text-xs bg-amber-500 text-black px-2 py-0.5 rounded font-black">CLICKER</span>
                     </h1>
                 </div>
 
@@ -61,20 +61,15 @@
 
             <!-- Right Controls: Theme, Language, Auth -->
             <div class="flex items-center space-x-3">
-                <!-- Theme Switcher -->
                 <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:opacity-80 transition" title="Toggle Theme">
                     <i id="themeIcon" class="fa-solid fa-moon"></i>
                 </button>
 
-                <!-- Language Selector -->
                 <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs rounded-xl px-2.5 py-1.5 outline-none">
                     <option value="ko">🇰🇷 한국어</option>
                     <option value="en">🇺🇸 English</option>
-                    <option value="zh">🇨🇳 中文</option>
-                    <option value="ja">🇯🇵 日本語</option>
                 </select>
 
-                <!-- Auth Container -->
                 <div id="authContainer" class="flex items-center space-x-2"></div>
             </div>
         </div>
@@ -115,7 +110,7 @@
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         로그인한 유저는 기술 이름과 유튜브 URL만 등록할 수 있습니다. <br>
-                        <strong>추천 10명 이상</strong> 달성 시 관리자가 일괄 승인하여 공식 평가 페이지로 이동합니다.
+                        <strong>추천 10명 이상</strong> 달성 시 관리자가 일괄 승인하여 공식 Clicker 측정 목록으로 이동합니다.
                     </p>
                 </div>
 
@@ -165,25 +160,22 @@
 
     <!-- Footer -->
     <footer class="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 mt-auto">
-        <p>© 2026 Yo-Yo 1A Standardization Project.</p>
+        <p>© 2026 Yo-Yo 1A Trick Clicker Project.</p>
     </footer>
 
-    <!-- Auth Modal (Login & Signup) -->
+    <!-- Auth Modal -->
     <div id="authModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 w-full max-w-md relative shadow-2xl">
             <button onclick="closeModal('authModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            
             <h2 id="authTitle" class="text-xl font-bold mb-4 text-slate-900 dark:text-white">로그인</h2>
 
-            <!-- Main Auth Mode Tabs -->
             <div class="flex border-b border-slate-200 dark:border-slate-800 mb-4 text-xs font-bold">
                 <button onclick="switchAuthMode('login')" id="tabModeLogin" class="flex-1 py-2 text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white">로그인</button>
                 <button onclick="switchAuthMode('signup')" id="tabModeSignup" class="flex-1 py-2 text-slate-400 border-b-2 border-transparent">회원가입</button>
             </div>
 
-            <!-- User Sub-Type Selector (Only visible in Login) -->
             <div id="adminTabContainer" class="flex gap-2 mb-4">
                 <button onclick="setAuthUserType('user')" id="btnUserTypeMember" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white">일반 회원</button>
                 <button onclick="setAuthUserType('admin')" id="btnUserTypeAdmin" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-slate-100 dark:bg-slate-950 text-slate-400">관리자</button>
@@ -194,19 +186,14 @@
                     <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">아이디</label>
                     <input type="text" id="authUsername" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
                 </div>
-
                 <div>
                     <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">비밀번호</label>
                     <input type="password" id="authPassword" required class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
                 </div>
-
                 <div id="passwordConfirmField" class="hidden">
                     <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">비밀번호 확인</label>
                     <input type="password" id="authPasswordConfirm" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
                 </div>
-
-                <div id="authStatusMsg" class="text-xs font-semibold text-red-500 hidden py-1"></div>
-
                 <button type="submit" id="authSubmitBtn" class="w-full bg-slate-900 dark:bg-slate-100 text-white dark:text-black font-bold py-2.5 rounded-xl transition text-xs mt-2">
                     로그인
                 </button>
@@ -214,7 +201,7 @@
         </div>
     </div>
 
-    <!-- Official Add/Edit Trick Modal (Admin Only) -->
+    <!-- Add/Edit Trick Modal (Admin) -->
     <div id="trickModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 w-full max-w-lg relative shadow-2xl">
             <button onclick="closeModal('trickModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
@@ -228,6 +215,16 @@
                     <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">기술 이름</label>
                     <input type="text" id="trickName" required class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-slate-100">
                 </div>
+                
+                <!-- Combo Trick Toggle -->
+                <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between">
+                    <div>
+                        <span class="block text-xs font-bold text-amber-500">콤보 기술 설정</span>
+                        <span class="text-[10px] text-slate-400">체크 시 0~20점(Clicks) 범위 적용 / 해제 시 0~5점(Clicks) 적용</span>
+                    </div>
+                    <input type="checkbox" id="trickIsCombo" onchange="toggleComboMaxNotice()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer">
+                </div>
+
                 <div>
                     <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">난이도 (1 ~ 5+)</label>
                     <select id="trickDifficulty" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-slate-100">
@@ -240,8 +237,9 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">평점 직접 지정 (0~5)</label>
-                    <!-- min="0" 으로 0점 설정 허용 -->
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        초기 Clicker 설정 <span id="clickerMaxLimitNotice" class="text-amber-500 font-bold">(0~5 Clicks)</span>
+                    </label>
                     <input type="number" id="trickInitialScore" min="0" max="5" step="0.1" value="3.0" required class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-slate-100">
                 </div>
                 <div>
@@ -284,34 +282,37 @@
         </div>
     </div>
 
-    <!-- Rate Vote Modal -->
+    <!-- Clicker Rate Modal (Support 0~5 or 0~20) -->
     <div id="rateModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 w-full max-w-sm relative shadow-2xl">
             <button onclick="closeModal('rateModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            <h2 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">난이도 점수 투표</h2>
+            <h2 class="text-lg font-bold mb-1 text-slate-900 dark:text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-hand-pointer text-amber-500"></i> Clicker 측정 투표
+            </h2>
             <p id="rateTargetName" class="text-xs font-semibold text-slate-500 mb-4"></p>
 
             <input type="hidden" id="rateTargetId">
-            <div class="space-y-3">
-                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300">점수 선택 (0.0 ~ 5.0)</label>
-                <select id="voteScoreSelect" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100">
-                    <option value="0">0.0 점 (0점 - 매우 쉬움 / 기타)</option>
-                    <option value="1">1.0 점</option>
-                    <option value="2">2.0 점</option>
-                    <option value="3" selected>3.0 점 (보통)</option>
-                    <option value="4">4.0 점</option>
-                    <option value="5">5.0 점 (최고 난이도)</option>
+            <input type="hidden" id="rateMaxLimit" value="5">
+
+            <div class="space-y-4">
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300">
+                    부여할 클릭 수 선택 (<span id="voteLimitText">0 ~ 5 Clicks</span>)
+                </label>
+                
+                <select id="voteScoreSelect" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-sm font-bold text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-amber-500">
+                    <!-- Dynamic Options Populated JS -->
                 </select>
-                <button onclick="executeVoteSubmit()" class="w-full bg-slate-900 dark:bg-slate-100 text-white dark:text-black font-bold py-2.5 rounded-xl transition text-xs">
-                    투표 제출하기 (월 1회 제한)
+
+                <button onclick="executeVoteSubmit()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
+                    <i class="fa-solid fa-check"></i> Clicker 투표 제출하기
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase Modular SDK Script -->
+    <!-- Firebase SDK & Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
         import { 
@@ -324,8 +325,7 @@
             projectId: "yoyopoint-f28c4",
             storageBucket: "yoyopoint-f28c4.firebasestorage.app",
             messagingSenderId: "1071571356574",
-            appId: "1:1071571356574:web:e84ed1f0d30f50bd42648f",
-            measurementId: "G-0VEW1DTMPW"
+            appId: "1:1071571356574:web:e84ed1f0d30f50bd42648f"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -348,6 +348,7 @@
             {
                 id: "1",
                 name: "Trapeze",
+                isCombo: false,
                 difficulty: "1",
                 score: 1.5,
                 ratings: [1.5],
@@ -357,20 +358,22 @@
             {
                 id: "2",
                 name: "Double or Nothing",
+                isCombo: false,
                 difficulty: "2",
                 score: 2.8,
                 ratings: [2.8],
                 videoId: "94B8n0kZpC4",
-                desc: "손가락에 줄을 두 번 감아 올리는 기초 종합 트릭입니다."
+                desc: "손가락에 줄을 두 번 감아 올리는 기초 트릭입니다."
             },
             {
                 id: "3",
-                name: "Kwijibo",
-                difficulty: "4",
-                score: 4.2,
-                ratings: [4.2],
+                name: "Speed Combo EX",
+                isCombo: true,
+                difficulty: "5+",
+                score: 14.5,
+                ratings: [14.5],
                 videoId: "s6M58fP_Pno",
-                desc: "손을 교차하며 화려하게 위치를 바꾸는 고난도 콤보 트릭."
+                desc: "[콤보 기술] 화려한 속도감과 복합 연계 동작을 요구하는 콤보입니다."
             }
         ];
 
@@ -416,7 +419,7 @@
         }
     </script>
 
-    <!-- Global Application Logic Script -->
+    <!-- App Main Script -->
     <script>
         const translations = {
             ko: {
@@ -426,20 +429,18 @@
                 totalTricks: "총 {count}개의 기술",
                 login: "로그인 / 회원가입",
                 logout: "로그아웃",
-                rateBtn: "점수 평가",
-                ratedMsg: "평가완료 ({days}일 남음)",
-                loginToRate: "로그인 후 평가 가능"
+                rateBtn: "Clicker 입력",
+                loginToRate: "로그인 후 Clicker 입력 가능"
             },
             en: {
                 navOfficial: "Official Tricks",
-                navProposals: "Trick Proposals",
+                navProposals: "Proposals",
                 navFeedback: "Feedback",
                 totalTricks: "Total {count} tricks",
                 login: "Login / Sign Up",
                 logout: "Logout",
-                rateBtn: "Submit Rate",
-                ratedMsg: "Rated ({days} days left)",
-                loginToRate: "Login required to rate"
+                rateBtn: "Input Clicks",
+                loginToRate: "Login to click"
             }
         };
 
@@ -537,7 +538,6 @@
 
             if (query) {
                 list = list.filter(item => item.name.toLowerCase().includes(query));
-                list.sort((a, b) => Math.abs(a.name.length - query.length) - Math.abs(b.name.length - query.length));
             }
 
             const grid = document.getElementById('trickGrid');
@@ -545,32 +545,36 @@
             if (countElem) countElem.innerText = t('totalTricks', { count: list.length });
 
             if (list.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400">등록된 공식 기술이 없습니다.</div>`;
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400">등록된 기술이 없습니다.</div>`;
                 return;
             }
 
             grid.innerHTML = list.map(trick => {
                 const ytId = extractYouTubeId(trick.videoId);
                 const hasRated = checkUserRated(trick.id);
-                // score가 0일 수도 있으므로 !== undefined 조건 사용
                 const rawScore = (trick.score !== undefined && trick.score !== null) ? Number(trick.score) : 0;
                 const avgScore = rawScore.toFixed(1);
+                const maxVal = trick.isCombo ? 20 : 5;
 
                 let rateButtonHtml = '';
                 if (!currentUser) {
-                    rateButtonHtml = `<button onclick="openAuthModal()" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-semibold cursor-pointer">${t('loginToRate')}</button>`;
+                    rateButtonHtml = `<button onclick="openAuthModal()" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-semibold">${t('loginToRate')}</button>`;
                 } else if (hasRated) {
-                    rateButtonHtml = `<button disabled class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800/50 text-slate-400 text-xs font-semibold cursor-not-allowed">평가 완료</button>`;
+                    rateButtonHtml = `<button disabled class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800/50 text-slate-400 text-xs font-semibold cursor-not-allowed">Clicker 입력완료</button>`;
                 } else {
-                    rateButtonHtml = `<button onclick="openRateModal('${trick.id}', '${trick.name.replace(/'/g, "\\'")}')" class="w-full py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-black font-bold text-xs hover:opacity-90 transition">${t('rateBtn')}</button>`;
+                    rateButtonHtml = `<button onclick="openRateModal('${trick.id}', '${trick.name.replace(/'/g, "\\'")}', ${trick.isCombo || false})" class="w-full py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-arrow-pointer"></i> ${t('rateBtn')}
+                    </button>`;
                 }
 
                 const adminControls = (currentUser && currentUser.isAdmin) ? `
-                    <div class="flex items-center space-x-1 mt-2">
-                        <button onclick="openEditModal('${trick.id}')" class="text-xs text-blue-500 hover:underline p-1">수정</button>
-                        <button onclick="deleteTrick('${trick.id}')" class="text-xs text-red-500 hover:underline p-1">삭제</button>
+                    <div class="flex items-center space-x-2 mt-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+                        <button onclick="openEditModal('${trick.id}')" class="text-xs text-blue-500 hover:underline">수정</button>
+                        <button onclick="deleteTrick('${trick.id}')" class="text-xs text-red-500 hover:underline">삭제</button>
                     </div>
                 ` : '';
+
+                const comboTag = trick.isCombo ? `<span class="bg-amber-500 text-black text-[10px] font-extrabold px-2 py-0.5 rounded-full">COMBO (0~20 Clicks)</span>` : `<span class="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded-full">일반 (0~5 Clicks)</span>`;
 
                 return `
                     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:border-slate-400 dark:hover:border-slate-700 transition flex flex-col">
@@ -580,22 +584,23 @@
 
                         <div class="p-5 flex-grow flex flex-col justify-between">
                             <div>
-                                <div class="flex justify-between items-start mb-2">
-                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">${trick.name}</h3>
-                                    <span class="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-bold">
+                                <div class="flex items-center justify-between gap-2 mb-1.5">
+                                    ${comboTag}
+                                    <span class="text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-bold">
                                         Lv. ${trick.difficulty || '1'}
                                     </span>
                                 </div>
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">${trick.name}</h3>
                                 <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 line-clamp-2">${trick.desc || ''}</p>
                             </div>
 
                             <div>
                                 <div class="flex items-center justify-between mb-3 bg-slate-50 dark:bg-black/50 p-3 rounded-xl border border-slate-200/60 dark:border-slate-800">
-                                    <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold">평균 난이도 점수</span>
+                                    <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold">평균 Clicker 수치</span>
                                     <div class="flex items-center space-x-1">
-                                        <i class="fa-solid fa-star text-amber-400 text-xs"></i>
-                                        <span class="text-sm font-extrabold text-slate-900 dark:text-white">${avgScore}</span>
-                                        <span class="text-[10px] text-slate-400">/ 5.0</span>
+                                        <i class="fa-solid fa-arrow-pointer text-amber-500 text-xs"></i>
+                                        <span class="text-base font-extrabold text-slate-900 dark:text-white">${avgScore}</span>
+                                        <span class="text-[10px] text-slate-400">/ ${maxVal} Clicks</span>
                                     </div>
                                 </div>
                                 ${rateButtonHtml}
@@ -674,18 +679,34 @@
             }
         }
 
-        /* Modal Helpers */
         function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+
+        function toggleComboMaxNotice() {
+            const isCombo = document.getElementById('trickIsCombo').checked;
+            const notice = document.getElementById('clickerMaxLimitNotice');
+            const scoreInput = document.getElementById('trickInitialScore');
+
+            if (isCombo) {
+                notice.innerText = "(0~20 Clicks)";
+                scoreInput.max = "20";
+            } else {
+                notice.innerText = "(0~5 Clicks)";
+                scoreInput.max = "5";
+                if (parseFloat(scoreInput.value) > 5) scoreInput.value = "5";
+            }
+        }
 
         function openAddModal() {
             document.getElementById('trickModalTitle').innerText = "공식 기술 직접 추가 (관리자)";
             document.getElementById('editTrickId').value = "";
             document.getElementById('trickName').value = "";
+            document.getElementById('trickIsCombo').checked = false;
             document.getElementById('trickDifficulty').value = "1";
             document.getElementById('trickInitialScore').value = "3.0";
             document.getElementById('trickVideoUrl').value = "";
             document.getElementById('trickDesc').value = "";
+            toggleComboMaxNotice();
             openModal('trickModal');
         }
 
@@ -695,11 +716,12 @@
             document.getElementById('trickModalTitle').innerText = "기술 정보 수정 (관리자)";
             document.getElementById('editTrickId').value = target.id;
             document.getElementById('trickName').value = target.name || "";
+            document.getElementById('trickIsCombo').checked = target.isCombo || false;
             document.getElementById('trickDifficulty').value = target.difficulty || "1";
-            // 0점도 올바르게 채워 넣을 수 있도록 0 체크
             document.getElementById('trickInitialScore').value = (target.score !== undefined && target.score !== null) ? target.score : 3.0;
             document.getElementById('trickVideoUrl').value = target.videoId || "";
             document.getElementById('trickDesc').value = target.desc || "";
+            toggleComboMaxNotice();
             openModal('trickModal');
         }
 
@@ -714,26 +736,37 @@
             openModal('proposalModal');
         }
 
-        function openRateModal(trickId, trickName) {
+        function openRateModal(trickId, trickName, isCombo) {
             document.getElementById('rateTargetId').value = trickId;
             document.getElementById('rateTargetName').innerText = `대상 기술: ${trickName}`;
-            document.getElementById('voteScoreSelect').value = "3";
+            
+            const maxVal = isCombo ? 20 : 5;
+            document.getElementById('rateMaxLimit').value = maxVal;
+            document.getElementById('voteLimitText').innerText = `0 ~ ${maxVal} Clicks`;
+
+            const select = document.getElementById('voteScoreSelect');
+            select.innerHTML = '';
+
+            for (let i = 0; i <= maxVal; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = `${i}.0 Clicks ${i === 0 ? '(0 Clicks)' : ''} ${i === maxVal ? `(최대 ${maxVal} Clicks)` : ''}`;
+                if (i === Math.floor(maxVal / 2)) opt.selected = true;
+                select.appendChild(opt);
+            }
+
             openModal('rateModal');
         }
 
-        /* Execute Actions & Firebase Operations */
-
-        // 0점 및 사용자 입력 점수를 저장하는 핸들러
         async function handleTrickSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('editTrickId').value || String(Date.now());
             const name = document.getElementById('trickName').value.trim();
+            const isCombo = document.getElementById('trickIsCombo').checked;
             const difficulty = document.getElementById('trickDifficulty').value;
             
-            // 0점 허용을 위한 입력값 파싱 (빈 문자열 체크)
             const initialScoreVal = document.getElementById('trickInitialScore').value;
             const scoreNum = initialScoreVal !== "" ? parseFloat(initialScoreVal) : 0;
-            
             const videoUrl = document.getElementById('trickVideoUrl').value.trim();
             const desc = document.getElementById('trickDesc').value.trim();
 
@@ -743,6 +776,7 @@
             const item = {
                 id,
                 name,
+                isCombo,
                 difficulty,
                 score: scoreNum,
                 ratings: ratingsArr,
@@ -759,14 +793,14 @@
             await window.deleteDoc(window.doc(window.db, "tricks", id));
         }
 
-        // 0점 포함 점수 투표 실행
         async function executeVoteSubmit() {
             const trickId = document.getElementById('rateTargetId').value;
             const scoreVal = document.getElementById('voteScoreSelect').value;
-            const scoreNum = parseFloat(scoreVal); // 0일 경우 0.0 으로 정상 변환됨
+            const maxVal = parseInt(document.getElementById('rateMaxLimit').value);
+            const scoreNum = parseFloat(scoreVal);
 
-            if (isNaN(scoreNum) || scoreNum < 0 || scoreNum > 5) {
-                alert("유효한 점수를 선택해 주세요.");
+            if (isNaN(scoreNum) || scoreNum < 0 || scoreNum > maxVal) {
+                alert(`0에서 ${maxVal} Clicks 사이의 올바른 값을 선택해 주세요.`);
                 return;
             }
 
@@ -778,13 +812,11 @@
 
             const newAvgScore = currentRatings.reduce((a, b) => a + b, 0) / currentRatings.length;
 
-            // Firestore 업데이트
             await window.updateDoc(window.doc(window.db, "tricks", trickId), {
                 ratings: currentRatings,
                 score: newAvgScore
             });
 
-            // 유저 평가 히스토리 기록
             if (currentUser) {
                 if (!currentUser.ratedTricks) currentUser.ratedTricks = {};
                 currentUser.ratedTricks[trickId] = true;
@@ -794,7 +826,7 @@
 
             closeModal('rateModal');
             renderOfficialTricks();
-            alert(`${scoreNum.toFixed(1)}점으로 투표가 완료되었습니다!`);
+            alert(`${scoreNum.toFixed(1)} Clicks로 입력되었습니다!`);
         }
 
         async function handleProposalSubmit(e) {
@@ -843,12 +875,13 @@
                 return;
             }
 
-            if (!confirm(`총 ${targets.length}개의 제안 기술을 공식 항목으로 승인하시겠습니까?`)) return;
+            if (!confirm(`총 ${targets.length}개의 제안 기술을 승인하시겠습니까?`)) return;
 
             for (const prop of targets) {
                 const trickItem = {
                     id: String(Date.now() + Math.random()),
                     name: prop.name,
+                    isCombo: false,
                     difficulty: "1",
                     score: 3.0,
                     ratings: [3.0],
@@ -859,7 +892,7 @@
                 await window.deleteDoc(window.doc(window.db, "proposals", prop.id));
             }
 
-            alert("성공적으로 승인되어 공식 기술 목록으로 이동되었습니다.");
+            alert("승인이 완료되었습니다.");
         }
 
         async function handleFeedbackSubmit(e) {
@@ -885,7 +918,6 @@
             alert("피드백이 전송되었습니다.");
         }
 
-        /* Auth Logic */
         let authMode = 'login';
         let authUserType = 'user';
 
@@ -895,7 +927,7 @@
             authMode = mode;
             document.getElementById('authTitle').innerText = mode === 'login' ? '로그인' : '회원가입';
             document.getElementById('tabModeLogin').className = mode === 'login' ? 'flex-1 py-2 text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white' : 'flex-1 py-2 text-slate-400 border-b-2 border-transparent';
-            document.getElementById('tabModeSignup').className = mode === 'signup' ? 'flex-1 py-2 text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white' : 'flex-1 py-2 text-slate-400 border-b-2 border-transparent';
+            document.getElementById('tabModeSignup').className = mode === 'signup' ? 'flex-1 py-2 text-slate-900 dark:text-white border-b-2 border-transparent' : 'flex-1 py-2 text-slate-400 border-b-2 border-transparent';
             document.getElementById('passwordConfirmField').classList.toggle('hidden', mode === 'login');
             document.getElementById('adminTabContainer').classList.toggle('hidden', mode === 'signup');
             document.getElementById('authSubmitBtn').innerText = mode === 'login' ? '로그인' : '회원가입 완료';
