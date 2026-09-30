@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yo-Yo 1A Trick Clicker Standardization Platform</title>
+    <title>Yo-Yo 1A Trick & Freestyle Evaluation Platform</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -45,9 +45,12 @@
                     </h1>
                 </div>
 
-                <nav class="flex items-center space-x-1 text-xs font-bold">
+                <nav class="flex items-center space-x-1 text-xs font-bold flex-wrap gap-y-1">
                     <button id="navOfficial" onclick="switchMainTab('official')" class="px-3 py-2 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white transition">
                         <i class="fa-solid fa-list-check mr-1"></i> <span data-i18n="navOfficial">공식 기술</span>
+                    </button>
+                    <button id="navFreestyle" onclick="switchMainTab('freestyle')" class="px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition">
+                        <i class="fa-solid fa-person-running mr-1 text-purple-500"></i> <span>프리스타일 Routine 평가</span>
                     </button>
                     <button id="navProposals" onclick="switchMainTab('proposals')" class="px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition relative">
                         <i class="fa-solid fa-lightbulb mr-1"></i> <span data-i18n="navProposals">기술 제안 / 후보</span>
@@ -101,7 +104,52 @@
             <div id="trickGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- PAGE 2: USER PROPOSALS -->
+        <!-- PAGE 2: FREESTYLE EVALUATION -->
+        <section id="pageFreestyle" class="space-y-6 hidden">
+            <!-- Top Controls & Search -->
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-person-running text-purple-500"></i> 프리스타일 (Routine) 추가 / 감점 평가
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        대회 루틴 영상을 감상하고 <strong>추가점수(+)</strong>와 <strong>차감점수(-)</strong>를 각각 투표해 주세요.<br>
+                        로그인 후 <strong>2주(14일)마다 1회</strong> 투표할 수 있으며, 후보를 자유롭게 등록할 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+                    <button onclick="openRoutineProposalModal()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>루틴 후보 제안하기</span>
+                    </button>
+                    <button id="addRoutineBtn" onclick="openRoutineModal()" class="hidden bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-black font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span>새 루틴 직접 추가 (관리자)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Routine Search Box -->
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 pl-2"></i>
+                <input type="text" id="routineSearchInput" oninput="renderRoutines()" placeholder="선수 이름, 대회명, 연도 등으로 루틴을 검색하세요..." 
+                    class="w-full bg-transparent border-none text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none text-sm">
+            </div>
+
+            <!-- Routine Grid -->
+            <div id="routineGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <!-- Routine Candidates Section (Admin / Users) -->
+            <div class="border-t border-slate-200 dark:border-slate-800 pt-8 mt-12">
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-amber-500"></i> 검토 중인 프리스타일 루틴 후보
+                </h3>
+                <div id="routineProposalGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: USER PROPOSALS -->
         <section id="pageProposals" class="space-y-6 hidden">
             <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
@@ -129,7 +177,7 @@
             <div id="proposalGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- PAGE 3: FEEDBACK & REQUESTS -->
+        <!-- PAGE 4: FEEDBACK & REQUESTS -->
         <section id="pageFeedback" class="space-y-6 hidden">
             <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
@@ -201,7 +249,95 @@
         </div>
     </div>
 
-    <!-- Add/Edit Trick Modal (Admin) -->
+    <!-- Routine Proposal / Add Modal -->
+    <div id="routineModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 w-full max-w-md relative shadow-2xl">
+            <button onclick="closeModal('routineModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h2 id="routineModalHeader" class="text-xl font-bold mb-1 text-slate-900 dark:text-white">프리스타일 루틴 등록</h2>
+            <p class="text-xs text-slate-500 mb-4">대회 루틴 영상과 기본 정보를 정확히 입력해 주세요.</p>
+
+            <form onsubmit="handleRoutineSubmit(event)" class="space-y-3">
+                <input type="hidden" id="routineIsAdminFlag" value="false">
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">루틴 제목 / 대회명</label>
+                    <input type="text" id="routineTitle" required placeholder="예: 2024 WYYC 1A Final Hajime Miura" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">선수 이름</label>
+                    <input type="text" id="routinePlayer" required placeholder="예: Hajime Miura" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">유튜브 영상 링크</label>
+                    <input type="text" id="routineUrl" required placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none">
+                </div>
+
+                <div class="p-3 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
+                    <p class="font-bold text-amber-500 mb-1"><i class="fa-solid fa-circle-info mr-1"></i> 작성 가이드</p>
+                    <p class="leading-relaxed">* Please list in the following order: Year, Full Contest Name (ALL CAPS), Division, Stage (ex: Prelim, Final), Player Name (Capitalize First Letter).</p>
+                </div>
+
+                <button type="submit" id="routineModalSubmitBtn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-xl transition text-xs mt-2">
+                    루틴 등록하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Freestyle Vote Modal -->
+    <div id="freestyleVoteModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 w-full max-w-sm relative shadow-2xl">
+            <button onclick="closeModal('freestyleVoteModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h2 class="text-lg font-bold mb-1 text-slate-900 dark:text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-person-running text-purple-500"></i> Routine 점수 평가
+            </h2>
+            <p id="freestyleVoteTargetTitle" class="text-xs font-semibold text-slate-500 mb-4 line-clamp-1"></p>
+
+            <input type="hidden" id="freestyleTargetId">
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-emerald-500 mb-1">
+                        <i class="fa-solid fa-plus-circle mr-1"></i> 추가 점수 (+) 선택 (0~50점)
+                    </label>
+                    <input type="number" id="votePlusScore" min="0" max="50" step="0.5" value="10.0" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm font-bold text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-red-500 mb-1">
+                        <i class="fa-solid fa-minus-circle mr-1"></i> 차감 점수 (-) 선택 (0~50점)
+                    </label>
+                    <input type="number" id="voteMinusScore" min="0" max="50" step="0.5" value="2.0" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm font-bold text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+
+                <div class="p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-[11px] text-slate-400">
+                    <i class="fa-solid fa-circle-info mr-1 text-purple-400"></i> 2주에 한 번만 투표 가능하므로 신중하게 입력하세요.
+                </div>
+
+                <button onclick="executeFreestyleVoteSubmit()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-extrabold py-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-600/20">
+                    <i class="fa-solid fa-check"></i> 루틴 평가 제출하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Routine Ratings Detail Modal (더보기) -->
+    <div id="routineDetailModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 w-full max-w-lg relative shadow-2xl flex flex-col max-h-[80vh]">
+            <button onclick="closeModal('routineDetailModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h2 id="routineDetailTitle" class="text-lg font-bold text-slate-900 dark:text-white mb-1">개별 투표 평가 내역</h2>
+            <p class="text-xs text-slate-400 mb-4">각 평가 유저의 추가/차감 점수 내역입니다.</p>
+
+            <div id="routineDetailList" class="space-y-2 overflow-y-auto pr-1 flex-grow"></div>
+        </div>
+    </div>
+
+    <!-- Trick Modal & Other Modals -->
     <div id="trickModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 w-full max-w-lg relative shadow-2xl">
             <button onclick="closeModal('trickModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
@@ -216,7 +352,6 @@
                     <input type="text" id="trickName" required class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-900 dark:text-slate-100">
                 </div>
                 
-                <!-- Combo Trick Toggle -->
                 <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between">
                     <div>
                         <span class="block text-xs font-bold text-amber-500">콤보 기술 설정</span>
@@ -282,7 +417,7 @@
         </div>
     </div>
 
-    <!-- Clicker Rate Modal (Support 0~5 or 0~20) -->
+    <!-- Clicker Rate Modal -->
     <div id="rateModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 w-full max-w-sm relative shadow-2xl">
             <button onclick="closeModal('rateModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white">
@@ -302,7 +437,6 @@
                 </label>
                 
                 <select id="voteScoreSelect" class="w-full bg-slate-100 dark:bg-black border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-sm font-bold text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-amber-500">
-                    <!-- Dynamic Options Populated JS -->
                 </select>
 
                 <button onclick="executeVoteSubmit()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
@@ -340,6 +474,8 @@
         window.tricks = [];
         window.proposals = [];
         window.feedbacks = [];
+        window.routines = [];
+        window.routineProposals = [];
         window.currentMainTab = 'official';
         window.currentLang = 'ko';
         window.currentUser = JSON.parse(localStorage.getItem('yo1a_user')) || null;
@@ -364,16 +500,19 @@
                 ratings: [2.8],
                 videoId: "94B8n0kZpC4",
                 desc: "손가락에 줄을 두 번 감아 올리는 기초 트릭입니다."
-            },
+            }
+        ];
+
+        const seedRoutines = [
             {
-                id: "3",
-                name: "Speed Combo EX",
-                isCombo: true,
-                difficulty: "5+",
-                score: 14.5,
-                ratings: [14.5],
-                videoId: "s6M58fP_Pno",
-                desc: "[콤보 기술] 화려한 속도감과 복합 연계 동작을 요구하는 콤보입니다."
+                id: "r1",
+                title: "2024 WYYC 1A Final Hajime Miura",
+                player: "Hajime Miura",
+                url: "https://www.youtube.com/watch?v=s6M58fP_Pno",
+                evaluations: [
+                    { username: "YoYoMaster", plus: 25.5, minus: 2.0, date: "2026-09-15" },
+                    { username: "ClickerPro", plus: 28.0, minus: 1.5, date: "2026-09-20" }
+                ]
             }
         ];
 
@@ -387,6 +526,22 @@
                     window.tricks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     renderOfficialTricks();
                 }
+            });
+
+            onSnapshot(collection(db, "routines"), async (snapshot) => {
+                if (snapshot.empty) {
+                    for (const item of seedRoutines) {
+                        await setDoc(doc(db, "routines", item.id), item);
+                    }
+                } else {
+                    window.routines = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderRoutines();
+                }
+            });
+
+            onSnapshot(collection(db, "routine_proposals"), (snapshot) => {
+                window.routineProposals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderRoutineProposals();
             });
 
             onSnapshot(collection(db, "proposals"), (snapshot) => {
@@ -447,6 +602,7 @@
         function changeLanguage(lang) {
             window.currentLang = lang;
             renderOfficialTricks();
+            renderRoutines();
             renderProposals();
         }
 
@@ -468,6 +624,7 @@
         function switchMainTab(tab) {
             window.currentMainTab = tab;
             document.getElementById('pageOfficial').classList.toggle('hidden', tab !== 'official');
+            document.getElementById('pageFreestyle').classList.toggle('hidden', tab !== 'freestyle');
             document.getElementById('pageProposals').classList.toggle('hidden', tab !== 'proposals');
             document.getElementById('pageFeedback').classList.toggle('hidden', tab !== 'feedback');
 
@@ -475,6 +632,7 @@
             const inactiveClass = "px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition relative";
 
             document.getElementById('navOfficial').className = tab === 'official' ? activeClass : inactiveClass;
+            document.getElementById('navFreestyle').className = tab === 'freestyle' ? activeClass : inactiveClass;
             document.getElementById('navProposals').className = tab === 'proposals' ? activeClass : inactiveClass;
             document.getElementById('navFeedback').className = tab === 'feedback' ? activeClass : inactiveClass;
         }
@@ -489,6 +647,7 @@
         function renderAuthContainer() {
             const container = document.getElementById('authContainer');
             const addBtn = document.getElementById('addTrickBtn');
+            const addRoutineBtn = document.getElementById('addRoutineBtn');
             const batchBtn = document.getElementById('adminBatchApproveBtn');
 
             if (currentUser) {
@@ -505,10 +664,12 @@
                 `;
                 if (currentUser.isAdmin) {
                     addBtn?.classList.remove('hidden');
+                    addRoutineBtn?.classList.remove('hidden');
                     batchBtn?.classList.remove('hidden');
                     batchBtn?.classList.add('flex');
                 } else {
                     addBtn?.classList.add('hidden');
+                    addRoutineBtn?.classList.add('hidden');
                     batchBtn?.classList.add('hidden');
                 }
             } else {
@@ -519,9 +680,313 @@
                     </button>
                 `;
                 addBtn?.classList.add('hidden');
+                addRoutineBtn?.classList.add('hidden');
                 batchBtn?.classList.add('hidden');
             }
         }
+
+        /* ===== ROUTINE EVALUATION & PROPOSALS ===== */
+
+        function renderRoutines() {
+            const grid = document.getElementById('routineGrid');
+            if (!grid) return;
+
+            const query = document.getElementById('routineSearchInput')?.value.trim().toLowerCase() || '';
+            let list = [...window.routines];
+
+            if (query) {
+                list = list.filter(rt => 
+                    (rt.title && rt.title.toLowerCase().includes(query)) ||
+                    (rt.player && rt.player.toLowerCase().includes(query))
+                );
+            }
+
+            if (list.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400">등록되었거나 검색 조건에 맞는 프리스타일 루틴이 없습니다.</div>`;
+                return;
+            }
+
+            grid.innerHTML = list.map(rt => {
+                const ytId = extractYouTubeId(rt.url);
+                const evals = rt.evaluations || [];
+                const totalCount = evals.length;
+
+                let avgPlus = 0;
+                let avgMinus = 0;
+
+                if (totalCount > 0) {
+                    avgPlus = (evals.reduce((sum, e) => sum + (Number(e.plus) || 0), 0) / totalCount).toFixed(1);
+                    avgMinus = (evals.reduce((sum, e) => sum + (Number(e.minus) || 0), 0) / totalCount).toFixed(1);
+                }
+
+                const netAvg = (avgPlus - avgMinus).toFixed(1);
+
+                // 2주(14일) 투표 제한 체크
+                let canVote = true;
+                let daysLeft = 0;
+
+                if (currentUser && evals.length > 0) {
+                    const userVotes = evals.filter(e => e.username === currentUser.username);
+                    if (userVotes.length > 0) {
+                        const lastVote = userVotes[userVotes.length - 1];
+                        const lastDate = new Date(lastVote.date);
+                        const now = new Date();
+                        const diffTime = now - lastDate;
+                        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+                        if (diffDays < 14) {
+                            canVote = false;
+                            daysLeft = Math.ceil(14 - diffDays);
+                        }
+                    }
+                }
+
+                let voteButtonHtml = '';
+                if (!currentUser) {
+                    voteButtonHtml = `<button onclick="openAuthModal()" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-semibold">로그인 후 루틴 평가 가능</button>`;
+                } else if (!canVote) {
+                    voteButtonHtml = `<button disabled class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800/50 text-slate-400 text-xs font-semibold cursor-not-allowed">
+                        <i class="fa-solid fa-clock mr-1"></i> 평가 완료 (${daysLeft}일 후 재투표 가능)
+                    </button>`;
+                } else {
+                    voteButtonHtml = `<button onclick="openFreestyleVoteModal('${rt.id}', '${rt.title.replace(/'/g, "\\'")}')" class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
+                        <i class="fa-solid fa-pen-to-square"></i> 루틴 점수 평가하기
+                    </button>`;
+                }
+
+                const adminControls = (currentUser && currentUser.isAdmin) ? `
+                    <div class="mt-2 pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+                        <button onclick="deleteRoutine('${rt.id}')" class="text-xs text-red-500 hover:underline">루틴 삭제</button>
+                    </div>
+                ` : '';
+
+                return `
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:border-slate-400 dark:hover:border-slate-700 transition flex flex-col justify-between">
+                        <div>
+                            <div class="aspect-video w-full bg-black">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/${ytId}" title="${rt.title}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+
+                            <div class="p-5">
+                                <span class="bg-purple-500/10 text-purple-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-purple-500/20">
+                                    <i class="fa-solid fa-user-ninja mr-1"></i> ${rt.player || 'Yo-Yo Player'}
+                                </span>
+                                <h3 class="text-base font-bold text-slate-900 dark:text-white mt-2 mb-4 leading-snug">${rt.title}</h3>
+
+                                <div class="grid grid-cols-2 gap-2 mb-3">
+                                    <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
+                                        <span class="block text-[10px] text-emerald-500 font-bold">추가점수 (+) 평균</span>
+                                        <span class="text-base font-extrabold text-emerald-400">+${avgPlus}</span>
+                                    </div>
+                                    <div class="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
+                                        <span class="block text-[10px] text-red-500 font-bold">차감점수 (-) 평균</span>
+                                        <span class="text-base font-extrabold text-red-400">-${avgMinus}</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-black/50 rounded-xl border border-slate-200/60 dark:border-slate-800 mb-3">
+                                    <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold">최종 종합 평균</span>
+                                    <span class="text-base font-black ${netAvg >= 0 ? 'text-purple-400' : 'text-red-400'}">${netAvg >= 0 ? '+' : ''}${netAvg} 점</span>
+                                </div>
+
+                                <button onclick="openRoutineDetailModal('${rt.id}')" class="w-full py-1.5 mb-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800/60 rounded-lg transition flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-list-ul"></i> 개별 평가 내역 더보기 (${totalCount}명 참여)
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="p-5 pt-0">
+                            ${voteButtonHtml}
+                            ${adminControls}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRoutineProposals() {
+            const grid = document.getElementById('routineProposalGrid');
+            if (!grid) return;
+
+            if (window.routineProposals.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-6 text-center text-xs text-slate-400">대기 중인 프리스타일 루틴 후보가 없습니다.</div>`;
+                return;
+            }
+
+            grid.innerHTML = window.routineProposals.map(prop => {
+                const ytId = extractYouTubeId(prop.url);
+
+                const adminControls = (currentUser && currentUser.isAdmin) ? `
+                    <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                        <button onclick="approveRoutineProposal('${prop.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-1.5 rounded-lg transition">
+                            <i class="fa-solid fa-check mr-1"></i> 승인하여 공식 등록
+                        </button>
+                        <button onclick="deleteRoutineProposal('${prop.id}')" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 font-bold text-xs py-1.5 px-3 rounded-lg border border-red-500/20 transition">
+                            삭제
+                        </button>
+                    </div>
+                ` : `<div class="mt-2 text-[11px] text-amber-500 font-bold"><i class="fa-solid fa-hourglass-half mr-1"></i> 관리자 검토 대기 중</div>`;
+
+                return `
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
+                        <div>
+                            <div class="aspect-video w-full bg-black rounded-xl overflow-hidden mb-3">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <span class="text-[10px] text-purple-400 font-bold bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">${prop.player || 'Player'}</span>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm mt-1 mb-1">${prop.title}</h4>
+                            <p class="text-[10px] text-slate-400">제안자: ${prop.author || '익명'}</p>
+                        </div>
+                        ${adminControls}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openRoutineProposalModal() {
+            if (!currentUser) {
+                alert("루틴 제안은 로그인 후 이용 가능합니다.");
+                openAuthModal();
+                return;
+            }
+            document.getElementById('routineIsAdminFlag').value = "false";
+            document.getElementById('routineModalHeader').innerText = "프리스타일 루틴 후보 제안";
+            document.getElementById('routineModalSubmitBtn').innerText = "루틴 후보 제안하기";
+            document.getElementById('routineTitle').value = '';
+            document.getElementById('routinePlayer').value = '';
+            document.getElementById('routineUrl').value = '';
+            openModal('routineModal');
+        }
+
+        function openRoutineModal() {
+            document.getElementById('routineIsAdminFlag').value = "true";
+            document.getElementById('routineModalHeader').innerText = "새 루틴 직접 추가 (관리자)";
+            document.getElementById('routineModalSubmitBtn').innerText = "공식 루틴 등록하기";
+            document.getElementById('routineTitle').value = '';
+            document.getElementById('routinePlayer').value = '';
+            document.getElementById('routineUrl').value = '';
+            openModal('routineModal');
+        }
+
+        async function handleRoutineSubmit(e) {
+            e.preventDefault();
+            const isAdminDirect = document.getElementById('routineIsAdminFlag').value === "true";
+            const title = document.getElementById('routineTitle').value.trim();
+            const player = document.getElementById('routinePlayer').value.trim();
+            const url = document.getElementById('routineUrl').value.trim();
+
+            if (!title || !url) return;
+
+            const newRt = {
+                id: String(Date.now()),
+                title,
+                player,
+                url,
+                author: currentUser ? currentUser.username : '익명',
+                evaluations: []
+            };
+
+            if (isAdminDirect) {
+                await window.setDoc(window.doc(window.db, "routines", newRt.id), newRt);
+                alert("공식 루틴으로 즉시 등록되었습니다.");
+            } else {
+                await window.setDoc(window.doc(window.db, "routine_proposals", newRt.id), newRt);
+                alert("루틴 후보 제안이 완료되었습니다. 관리자 검토 후 등록됩니다.");
+            }
+
+            closeModal('routineModal');
+        }
+
+        async function approveRoutineProposal(id) {
+            const prop = window.routineProposals.find(p => p.id === id);
+            if (!prop) return;
+
+            if (!confirm(`'${prop.title}' 루틴을 승인하고 공식 항목으로 등록하시겠습니까?`)) return;
+
+            const officialItem = {
+                id: String(Date.now()),
+                title: prop.title,
+                player: prop.player,
+                url: prop.url,
+                evaluations: []
+            };
+
+            await window.setDoc(window.doc(window.db, "routines", officialItem.id), officialItem);
+            await window.deleteDoc(window.doc(window.db, "routine_proposals", id));
+
+            alert("프리스타일 루틴이 정상적으로 승인되었습니다.");
+        }
+
+        async function deleteRoutineProposal(id) {
+            if (!confirm("이 제안 루틴을 삭제하시겠습니까?")) return;
+            await window.deleteDoc(window.doc(window.db, "routine_proposals", id));
+        }
+
+        async function deleteRoutine(id) {
+            if (!confirm("이 프리스타일 루틴을 삭제하시겠습니까?")) return;
+            await window.deleteDoc(window.doc(window.db, "routines", id));
+        }
+
+        function openFreestyleVoteModal(routineId, title) {
+            document.getElementById('freestyleTargetId').value = routineId;
+            document.getElementById('freestyleVoteTargetTitle').innerText = title;
+            openModal('freestyleVoteModal');
+        }
+
+        async function executeFreestyleVoteSubmit() {
+            const id = document.getElementById('freestyleTargetId').value;
+            const plus = parseFloat(document.getElementById('votePlusScore').value) || 0;
+            const minus = parseFloat(document.getElementById('voteMinusScore').value) || 0;
+
+            const target = window.routines.find(r => r.id === id);
+            if (!target) return;
+
+            const evals = target.evaluations ? [...target.evaluations] : [];
+
+            evals.push({
+                username: currentUser.username,
+                plus: plus,
+                minus: minus,
+                date: new Date().toISOString().split('T')[0]
+            });
+
+            await window.updateDoc(window.doc(window.db, "routines", id), { evaluations: evals });
+            closeModal('freestyleVoteModal');
+            alert("프리스타일 루틴 평가가 완료되었습니다!");
+        }
+
+        function openRoutineDetailModal(routineId) {
+            const target = window.routines.find(r => r.id === routineId);
+            if (!target) return;
+
+            document.getElementById('routineDetailTitle').innerText = `${target.title} - 개별 평가 내역`;
+            const listElem = document.getElementById('routineDetailList');
+
+            const evals = target.evaluations || [];
+
+            if (evals.length === 0) {
+                listElem.innerHTML = `<div class="py-8 text-center text-xs text-slate-400">아직 등록된 평가 내역이 없습니다.</div>`;
+            } else {
+                listElem.innerHTML = evals.map(ev => `
+                    <div class="p-3 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-slate-900 dark:text-white">${ev.username}</span>
+                            <span class="text-[10px] text-slate-400 ml-2">${ev.date || ''}</span>
+                        </div>
+                        <div class="flex items-center gap-3 font-bold">
+                            <span class="text-emerald-500">+${Number(ev.plus).toFixed(1)}</span>
+                            <span class="text-red-500">-${Number(ev.minus).toFixed(1)}</span>
+                            <span class="text-slate-400 font-normal">|</span>
+                            <span class="text-purple-400">${(Number(ev.plus) - Number(ev.minus)).toFixed(1)}점</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            openModal('routineDetailModal');
+        }
+
+        /* ===== OFFICIAL TRICKS & CORE FUNCTIONS ===== */
 
         function checkUserRated(trickId) {
             if (!currentUser || !currentUser.ratedTricks) return false;
@@ -558,7 +1023,7 @@
 
                 let rateButtonHtml = '';
                 if (!currentUser) {
-                    rateButtonHtml = `<button onclick="openAuthModal()" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-semibold">${t('loginToRate')}</button>`;
+                    rateButtonHtml = `<button onclick="openAuthModal()" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-semibold">${t('loginToRate')}</button>`;
                 } else if (hasRated) {
                     rateButtonHtml = `<button disabled class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800/50 text-slate-400 text-xs font-semibold cursor-not-allowed">Clicker 입력완료</button>`;
                 } else {
@@ -626,7 +1091,6 @@
                 const votes = prop.voters ? prop.voters.length : 0;
                 const hasVoted = currentUser && prop.voters && prop.voters.includes(currentUser.username);
 
-                // 관리자 전용 제어 액션 (단일 승인 / 후보 삭제)
                 const adminProposalControls = (currentUser && currentUser.isAdmin) ? `
                     <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80">
                         <button onclick="approveSingleProposal('${prop.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] py-1.5 px-2 rounded-lg transition flex items-center justify-center gap-1">
@@ -805,7 +1269,7 @@
 
         async function deleteTrick(id) {
             if (!confirm("정말 이 기술을 삭제하시겠습니까?")) return;
-            await window.deleteDoc(window.doc(window.doc(window.db, "tricks", id)));
+            await window.deleteDoc(window.doc(window.db, "tricks", id));
         }
 
         async function executeVoteSubmit() {
@@ -883,9 +1347,6 @@
             await window.updateDoc(window.doc(window.db, "proposals", propId), { voters });
         }
 
-        /* ----- 새로 추가된 후보 관리자 제어 기능 ----- */
-
-        // 단일 후보 즉시 공식 기술 승인 (조건 무관)
         async function approveSingleProposal(propId) {
             const prop = window.proposals.find(p => p.id === propId);
             if (!prop) return;
@@ -909,7 +1370,6 @@
             alert(`'${prop.name}' 기술이 공식 기술에 등록되었습니다!`);
         }
 
-        // 후보 삭제 (관리자 전용)
         async function deleteProposal(propId) {
             const prop = window.proposals.find(p => p.id === propId);
             if (!prop) return;
@@ -920,7 +1380,6 @@
             alert("기술 후보가 삭제되었습니다.");
         }
 
-        // 10명 이상 항목 일괄 승인
         async function batchApproveProposals() {
             const targets = window.proposals.filter(p => p.voters && p.voters.length >= 10);
             if (targets.length === 0) {
@@ -1018,6 +1477,8 @@
             renderAuthContainer();
             closeModal('authModal');
             renderOfficialTricks();
+            renderRoutines();
+            renderRoutineProposals();
             renderProposals();
         }
 
@@ -1026,12 +1487,22 @@
             localStorage.removeItem('yo1a_user');
             renderAuthContainer();
             renderOfficialTricks();
+            renderRoutines();
+            renderRoutineProposals();
             renderProposals();
         }
 
-        // 바인딩 함수 전역 공개
+        // 전역 함수 노출
         window.approveSingleProposal = approveSingleProposal;
         window.deleteProposal = deleteProposal;
+        window.openRoutineProposalModal = openRoutineProposalModal;
+        window.openRoutineModal = openRoutineModal;
+        window.approveRoutineProposal = approveRoutineProposal;
+        window.deleteRoutineProposal = deleteRoutineProposal;
+        window.deleteRoutine = deleteRoutine;
+        window.openFreestyleVoteModal = openFreestyleVoteModal;
+        window.executeFreestyleVoteSubmit = executeFreestyleVoteSubmit;
+        window.openRoutineDetailModal = openRoutineDetailModal;
     </script>
 </body>
 </html>
