@@ -39,7 +39,7 @@
             <!-- Logo & Navigation Links -->
             <div class="flex items-center space-x-6">
                 <div class="flex items-center space-x-2.5 cursor-pointer" onclick="switchMainTab('official')">
-                    <i class="fa-solid fa-[#000] fa-arrow-pointer text-2xl text-slate-800 dark:text-slate-100"></i>
+                    <i class="fa-solid fa-arrow-pointer text-2xl text-slate-800 dark:text-slate-100"></i>
                     <h1 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                         Yo-Yo 1A <span class="text-xs bg-amber-500 text-black px-2 py-0.5 rounded font-black">CLICKER</span>
                     </h1>
@@ -110,14 +110,14 @@
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         로그인한 유저는 기술 이름과 유튜브 URL만 등록할 수 있습니다. <br>
-                        <strong>추천 10명 이상</strong> 달성 시 관리자가 일괄 승인하여 공식 Clicker 측정 목록으로 이동합니다.
+                        <strong>관리자는 개별 후보를 즉시 승인/삭제</strong>하거나, 추천 10명 이상인 항목을 일괄 승인할 수 있습니다.
                     </p>
                 </div>
 
                 <div class="flex items-center gap-2">
                     <button id="adminBatchApproveBtn" onclick="batchApproveProposals()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition items-center gap-1.5">
                         <i class="fa-solid fa-circle-check"></i>
-                        <span>10명 이상 항목 전체 승인</span>
+                        <span>10명 이상 항목 일괄 승인</span>
                     </button>
                     <button onclick="openProposalModal()" class="bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-black font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition">
                         <i class="fa-solid fa-plus"></i>
@@ -626,6 +626,18 @@
                 const votes = prop.voters ? prop.voters.length : 0;
                 const hasVoted = currentUser && prop.voters && prop.voters.includes(currentUser.username);
 
+                // 관리자 전용 제어 액션 (단일 승인 / 후보 삭제)
+                const adminProposalControls = (currentUser && currentUser.isAdmin) ? `
+                    <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                        <button onclick="approveSingleProposal('${prop.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] py-1.5 px-2 rounded-lg transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-check"></i> 즉시 승인
+                        </button>
+                        <button onclick="deleteProposal('${prop.id}')" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 font-bold text-[11px] py-1.5 px-3 rounded-lg border border-red-500/20 transition flex items-center gap-1">
+                            <i class="fa-solid fa-trash-can"></i> 삭제
+                        </button>
+                    </div>
+                ` : '';
+
                 return `
                     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm p-5 flex flex-col justify-between">
                         <div>
@@ -636,11 +648,14 @@
                             <p class="text-[11px] text-slate-400 mb-3">제안자: ${prop.author || '익명'}</p>
                         </div>
 
-                        <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
-                            <span class="text-xs font-bold text-amber-500"><i class="fa-solid fa-fire mr-1"></i> ${votes} 명 추천</span>
-                            <button onclick="toggleProposalVote('${prop.id}')" class="px-3 py-1.5 rounded-lg ${hasVoted ? 'bg-amber-500 text-black' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'} text-xs font-bold transition">
-                                ${hasVoted ? '추천 취소' : '추천하기'}
-                            </button>
+                        <div>
+                            <div class="flex items-center justify-between pt-2">
+                                <span class="text-xs font-bold text-amber-500"><i class="fa-solid fa-fire mr-1"></i> ${votes} 명 추천</span>
+                                <button onclick="toggleProposalVote('${prop.id}')" class="px-3 py-1.5 rounded-lg ${hasVoted ? 'bg-amber-500 text-black' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'} text-xs font-bold transition">
+                                    ${hasVoted ? '추천 취소' : '추천하기'}
+                                </button>
+                            </div>
+                            ${adminProposalControls}
                         </div>
                     </div>
                 `;
@@ -790,7 +805,7 @@
 
         async function deleteTrick(id) {
             if (!confirm("정말 이 기술을 삭제하시겠습니까?")) return;
-            await window.deleteDoc(window.doc(window.db, "tricks", id));
+            await window.deleteDoc(window.doc(window.doc(window.db, "tricks", id)));
         }
 
         async function executeVoteSubmit() {
@@ -868,6 +883,44 @@
             await window.updateDoc(window.doc(window.db, "proposals", propId), { voters });
         }
 
+        /* ----- 새로 추가된 후보 관리자 제어 기능 ----- */
+
+        // 단일 후보 즉시 공식 기술 승인 (조건 무관)
+        async function approveSingleProposal(propId) {
+            const prop = window.proposals.find(p => p.id === propId);
+            if (!prop) return;
+
+            if (!confirm(`'${prop.name}' 후보를 즉시 공식 기술로 등록하시겠습니까?`)) return;
+
+            const trickItem = {
+                id: String(Date.now()),
+                name: prop.name,
+                isCombo: false,
+                difficulty: "1",
+                score: 3.0,
+                ratings: [3.0],
+                videoId: extractYouTubeId(prop.url),
+                desc: `유저 ${prop.author || '익명'} 님의 제안으로 관리자가 승인한 기술입니다.`
+            };
+
+            await window.setDoc(window.doc(window.db, "tricks", trickItem.id), trickItem);
+            await window.deleteDoc(window.doc(window.db, "proposals", propId));
+
+            alert(`'${prop.name}' 기술이 공식 기술에 등록되었습니다!`);
+        }
+
+        // 후보 삭제 (관리자 전용)
+        async function deleteProposal(propId) {
+            const prop = window.proposals.find(p => p.id === propId);
+            if (!prop) return;
+
+            if (!confirm(`정말 '${prop.name}' 후보를 삭제하시겠습니까?`)) return;
+
+            await window.deleteDoc(window.doc(window.db, "proposals", propId));
+            alert("기술 후보가 삭제되었습니다.");
+        }
+
+        // 10명 이상 항목 일괄 승인
         async function batchApproveProposals() {
             const targets = window.proposals.filter(p => p.voters && p.voters.length >= 10);
             if (targets.length === 0) {
@@ -975,6 +1028,10 @@
             renderOfficialTricks();
             renderProposals();
         }
+
+        // 바인딩 함수 전역 공개
+        window.approveSingleProposal = approveSingleProposal;
+        window.deleteProposal = deleteProposal;
     </script>
 </body>
 </html>
